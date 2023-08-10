@@ -6,10 +6,13 @@ export default function LoginPortal() {
   return (
     <div>
       <Navbar />
-      <h1>Login Portal</h1>
-      <p>
+      <div className="text-center">
+      <h1 className="mb-3">Login Portal</h1>
+      <p className="mb-3">
         Please choose the appropriate role to login
       </p>
+      </div>
+     
       <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
       <ul className="grid  gap-6 md:grid-cols-2">
         <li>
@@ -18,9 +21,9 @@ export default function LoginPortal() {
                 document.getElementById("user-login").classList.remove("hidden");
                 document.getElementById("organizer-login").classList.add("hidden");
               } } />
-            <label htmlFor="hosting-small" className="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
-                <div className="block">
-                    <div className=" text-lg font-semibold">User</div>
+            <label htmlFor="hosting-small" className="inline-flex  items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">                           
+                <div className="block mx-auto">
+                    <div className=" text-lg font-semibold text-center">User</div>
                 </div>
                 
             </label>
@@ -31,9 +34,9 @@ export default function LoginPortal() {
                 document.getElementById("user-login").classList.add("hidden");
                 document.getElementById("organizer-login").classList.remove("hidden");
               } }  />
-            <label htmlFor="hosting-big" className="inline-flex items-center justify-between w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+            <label htmlFor="hosting-big" className="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
                 <div className="block">
-                    <div className=" text-lg font-semibold">Organizer</div>
+                    <div className=" text-lg text-center font-semibold">Organizer</div>
                 </div>
                
             </label>
