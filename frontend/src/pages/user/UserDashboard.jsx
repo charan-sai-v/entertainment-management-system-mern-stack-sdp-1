@@ -107,8 +107,8 @@ export default function UserDashboard() {
   
   </aside>
   <div className="p-4 sm:ml-64">
-   <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-      <div className="flex justify-end mb-10">
+   <div className="p-4 rounded-lg dark:border-gray-700">
+      <div className="flex justify-center md:justify-end mb-10">
         <form className="w-96">   
            <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
            <div className="relative">
@@ -152,7 +152,14 @@ export default function UserDashboard() {
          <h1 className="text-left pl-2 font-bold font-sans">Featured Events</h1>
          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             <div className="p-2">
-               <img src="https://img.freepik.com/free-vector/realistic-dynamic-fog-background_23-2149111508.jpg?w=996&t=st=1692434890~exp=1692435490~hmac=4edf5d5843d955d6cdef1cb91160b33b552a1ec278f8026f523ecd62efba7957" alt="" />
+               <img src="https://img.freepik.com/free-vector/realistic-dynamic-fog-background_23-2149111508.jpg?w=996&t=st=1692434890~exp=1692435490~hmac=4edf5d5843d955d6cdef1cb9but1160b33b552a1ec278f8026f523ecd62efba7957" alt="" />
+               <div>
+                  <h1>Good Singer Contest | VZA</h1>
+                  <button className="px-5 py-2.5  text-white rounded-lg  bg-blue-500 hover:bg-blue-600 ">
+                     Book Now
+                  </button>
+                  
+               </div>
             </div> 
             <div className="p-2">
                <img src="https://img.freepik.com/free-vector/realistic-dynamic-fog-background_23-2149111508.jpg?w=996&t=st=1692434890~exp=1692435490~hmac=4edf5d5843d955d6cdef1cb91160b33b552a1ec278f8026f523ecd62efba7957" alt="" />
@@ -165,6 +172,10 @@ export default function UserDashboard() {
             </div> 
          </div>
       </div>
+
+
+
+
       
 
       <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
