@@ -7,7 +7,8 @@ const organizerSchema = new mongoose.Schema({
         unique: true
     },
     phone: String,
-    password: String
+    password: String,
+    address: String
 })
 
 module.exports = mongoose.model('Organizer', organizerSchema)

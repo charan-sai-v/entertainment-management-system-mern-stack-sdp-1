@@ -1,6 +1,5 @@
 
 const jwt = require("jsonwebtoken");
-const admin = require("../../models/adminSchema");
 
 
 // auth middleware for admin
