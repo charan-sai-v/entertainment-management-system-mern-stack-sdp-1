@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 // auth middleware for employee
 async function employeeAuth(req, res, next) {
     const token = req.header("Authorization")
-    if (!token) return res.status(401).json({ message: "Access Denied" })
+    if (!token) return res.status(401).json({ message: "Token not found" })
     
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET)

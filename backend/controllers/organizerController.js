@@ -6,7 +6,7 @@ const Organizer = require('../models/modules/organizerSchema');
 const Event = require('../models/eventSchema');
 
 // organizer register
-async function register(req, res) {
+async function organizerRegister(req, res) {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const organizer = new Organizer({
@@ -24,7 +24,7 @@ async function register(req, res) {
 }
 
 // organizer login
-async function login(req, res) {
+async function organizerLogin(req, res) {
     try {
         // check if organizer exists
         const organizer = await Organizer.findOne({ email: req.body.email });
@@ -131,3 +131,14 @@ async function deleteEvent(req, res) {
     }
 }
 
+
+
+module.exports = {
+    organizerLogin,
+    organizerRegister,
+    createEvent,
+    getAllEmployees,
+    getEmployeeById,
+    updateEvent,
+    deleteEvent
+}
