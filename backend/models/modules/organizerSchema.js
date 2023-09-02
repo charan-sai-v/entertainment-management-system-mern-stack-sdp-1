@@ -8,7 +8,9 @@ const organizerSchema = new mongoose.Schema({
     },
     phone: String,
     password: String,
-    address: String
+    address: String,
+    created_at : { type: Date, default: Date.now },
+    updated_at : { type: Date, default: Date.now }
 })
 
 module.exports = mongoose.model('Organizer', organizerSchema)

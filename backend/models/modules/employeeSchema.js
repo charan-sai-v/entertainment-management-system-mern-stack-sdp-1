@@ -8,7 +8,9 @@ const employeeSchema = new mongoose.Schema({
     },
     password: String,
     phone: String,
-    address: String
+    address: String,
+    created_at : { type: Date, default: Date.now },
+    updated_at : { type: Date, default: Date.now }
 })
 
 module.exports = mongoose.model('Employee', employeeSchema)

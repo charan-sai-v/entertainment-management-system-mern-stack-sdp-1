@@ -8,7 +8,12 @@ const userSchema = new mongoose.Schema({
     },
     password: String,
     phone: String,
-    address: String
+    address: String,
+    gender: String,
+    image: Buffer,
+    created_at : { type: Date, default: Date.now },
+    updated_at : { type: Date, default: Date.now },
+    
 })
 
 module.exports = mongoose.model('User', userSchema)
