@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
+    user_id: String,
     booking_id: String,
     payment_type: String,
     payment_status: String,
