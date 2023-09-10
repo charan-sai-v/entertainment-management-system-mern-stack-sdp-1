@@ -137,8 +137,8 @@ module.exports = {
     organizerLogin,
     organizerRegister,
     createEvent,
-    getAllEmployees,
-    getEmployeeById,
+    getAllEvents,
+    getEventById,
     updateEvent,
     deleteEvent
 }

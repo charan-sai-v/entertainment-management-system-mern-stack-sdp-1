@@ -2,6 +2,7 @@
 const Employee = require('../models/modules/employeeSchema');
 const Organizer = require('../models/modules/organizerSchema')
 const Event = require('../models/eventSchema')
+const User = require('../models/userSchema')
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -79,8 +80,28 @@ async function viewEventById(req, res) {
     }
 }
 
+// view all users
+async function viewAllUsers(req, res) {
+    try {
+        const users = await User.findAll().select('-password');
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
 
-// 
+// view user by id
+async function viewUserById(req, res) {
+    try {
+        const user = await User.findById(req.params.id).select('-password');
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+
+
 
 module.exports = { 
     employeeLogin,
@@ -88,6 +109,7 @@ module.exports = {
     viewAllOrganizer,
     viewOrganizerById,
     viewAllEvents,
-    viewEventById
-
+    viewEventById,
+    viewAllUsers,
+    viewUserById
 }
