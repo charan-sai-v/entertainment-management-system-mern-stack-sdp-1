@@ -1,4 +1,8 @@
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ac24a633c39531ac58c9cfc0cbefb6aeae10dcfd
 const jwt = require("jsonwebtoken")
 
 // auth middleware for organizer
