@@ -9,7 +9,7 @@ export default function HomePage() {
         <section className="bg-white dark:bg-gray-900 ">
             <div className="py-8 px-4 mx-auto max-w-screen-xl  text-center lg:pb-16 lg:px-12">
                 <div className="flex flex-col items-center justify-center mb-4 space-x-4 sm:flex-row sm:space-x-0">
-                <img src={Img} alt="" className='h-96' />
+                <img src={Img} alt="" className='h-80' />
                 </div>
                
                 <span className="text-7xl font-bold  [&amp;::selection]:text-base-content relative col-start-1 row-start-1 bg-[linear-gradient(90deg,hsl(var(--s))_0%,hsl(var(--sf))_9%,hsl(var(--pf))_42%,hsl(var(--p))_47%,hsl(var(--a))_100%)] bg-clip-text [-webkit-text-fill-color:transparent] [&amp;::selection]:bg-blue-700/20 [@supports(color:oklch(0_0_0))]:bg-[linear-gradient(90deg,hsl(var(--s))_4%,color-mix(in_oklch,hsl(var(--sf)),hsl(var(--pf)))_22%,hsl(var(--p))_45%,color-mix(in_oklch,hsl(var(--p)),hsl(var(--a)))_67%,hsl(var(--a))_100.2%)]">Welcome to Entertainment Management System</span>
