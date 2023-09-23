@@ -6,6 +6,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import Dashbaord from './pages/user/Dashboard'
 import UserEventById from './pages/user/UserEventById'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
 
 
 export default function App() {
@@ -16,8 +18,11 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path='/dashboard' element={<Dashbaord />} />
-          <Route path="/event/1" element={<UserEventById />} />
+          <Route path='/user/dashboard' element={<Dashbaord />} />
+          <Route path="/user/event/:id" element={<UserEventById />} />
+
+          <Route path='/admin/login' element={<AdminLogin />} />
+          <Route path='/admin/dashboard' element={<AdminDashboard /> } />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -10,9 +10,10 @@ export default function UserEventById() {
   return (
     <div>
         <NavBar />
-        <h1>Event 1</h1>
+        
         <div className="p-10">
             <div className="flex flex-col items-center justify-center w-[750px] mx-auto">
+            <h1 className="my-6">Event 1</h1>
               <div className="stack ">
                 <img src={P} alt=""  className="rounded-lg h-[450px] w-[700px]" />
               </div>
@@ -33,8 +34,8 @@ export default function UserEventById() {
                         <Minus className={'h-4 w-4'} />
                     </Button>
                 </div>
-                <div>
-                    <Button>Buy Ticket</Button>
+                <div className="w-full">
+                    <Button className="mx-auto ">Book Now</Button>
                 </div>
             </div>
         </div>
