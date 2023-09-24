@@ -8,6 +8,8 @@ import Dashbaord from './pages/user/Dashboard'
 import UserEventById from './pages/user/UserEventById'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminAddEmployee from './pages/admin/AdminAddEmployee'
+import AdminViewEmployees from './pages/admin/AdminViewEmployees'
 
 
 export default function App() {
@@ -23,6 +25,8 @@ export default function App() {
 
           <Route path='/admin/login' element={<AdminLogin />} />
           <Route path='/admin/dashboard' element={<AdminDashboard /> } />
+          <Route path='/admin/employee/add' element={<AdminAddEmployee />} />
+          <Route path='/admin/employees' element={<AdminViewEmployees />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
