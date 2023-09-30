@@ -9,6 +9,8 @@ const employeeSchema = new mongoose.Schema({
     password: String,
     phone: String,
     address: String,
+    role : { type: String, default: 'employee' },
+    is_password_changed: { type: Boolean, default: false },
     created_at : { type: Date, default: Date.now },
     updated_at : { type: Date, default: Date.now }
 })

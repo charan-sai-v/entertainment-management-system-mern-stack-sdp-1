@@ -11,6 +11,11 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminAddEmployee from './pages/admin/AdminAddEmployee'
 import AdminViewEmployees from './pages/admin/AdminViewEmployees'
 
+import AdminPrivateRoute from './components/AdminPrivateRoute'
+import EmployeeLogin from './pages/employee/EmployeeLogin'
+import EmployeePrivateRoute from './components/EmployeePrivateRoute'
+import EmployeeDashboard from './pages/employee/EmployeeDashboard'
+
 
 export default function App() {
   return (
@@ -22,13 +27,30 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path='/user/dashboard' element={<Dashbaord />} />
           <Route path="/user/event/:id" element={<UserEventById />} />
-
-          <Route path='/admin/login' element={<AdminLogin />} />
-          <Route path='/admin/dashboard' element={<AdminDashboard /> } />
-          <Route path='/admin/employee/add' element={<AdminAddEmployee />} />
-          <Route path='/admin/employees' element={<AdminViewEmployees />} />
+         
         </Routes>
       </BrowserRouter>
+
+      <BrowserRouter basename='/admin'>
+        <Routes>
+          <Route path='/login' element={<AdminLogin />} />
+        </Routes>
+        <AdminPrivateRoute>
+            <Route path='/dashboard' element={<AdminDashboard />} />
+            <Route path='/employee/add' element={<AdminAddEmployee />} />
+            <Route path='/employees' element={<AdminViewEmployees />} />
+          </AdminPrivateRoute>
+      </BrowserRouter>
+
+      <BrowserRouter basename='/employee'>
+        <Routes>
+          <Route path='/login' element={<EmployeeLogin />} />
+        </Routes>
+        <EmployeePrivateRoute>
+          <Route path='/dashboard' element={<EmployeeDashboard />} />
+        </EmployeePrivateRoute>
+      </BrowserRouter>
+
     </ThemeProvider>
   )
 }

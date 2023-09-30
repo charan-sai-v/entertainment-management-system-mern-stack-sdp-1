@@ -22,7 +22,6 @@ const dbUrl = process.env.DB_URL
 
 
 
-
 app.get('/', (req, res)=>{
     res.send("Hello World!")
 })

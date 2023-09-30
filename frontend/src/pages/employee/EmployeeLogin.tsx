@@ -4,14 +4,13 @@ import { Label } from '@/components/ui/label'
 import React, { useState } from 'react'
 
 
-
 export default function EmployeeLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const submitHandler = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const data = await fetch('localhost:8000/api/employee/login', {
+    const data = await fetch('localhost:8000/employee/login', {
         body: JSON.stringify({
             email,
             password

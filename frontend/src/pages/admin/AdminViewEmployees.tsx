@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -32,50 +32,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import AdminNav from "@/components/AdminNav"
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-]
+import { Link, useNavigate } from "react-router-dom"
 
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
+
+type Employee = {
+  _id: string,
+  name: string,
+  email: string,
+  created_at: string,
+  updated_at: string
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const columns: ColumnDef<Payment>[] = [
 
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => {
@@ -92,25 +65,31 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
-    },
+    accessorKey: "name",
+    header: () => <div className="text-center">Name</div>,
+    cell: ({row}) => <div className="text-center">{row.getValue("name")}</div>
+  },
+  {
+    accessorKey: "phone",
+    header: () => <div className="text-center">Phone</div>,
+    cell: ({row}) => <div className="text-center">{row.getValue("phone")}</div>
+  },
+  {
+    accessorKey: "created_at",
+    header: () => <div className="text-center">Created At</div>,
+    cell: ({row}) => <div className="text-center">{row.getValue("created_at")}</div>
+  },
+  {
+    accessorKey: "updated_at",
+    header: () => <div className="text-center">Updated At</div>,
+    cell: ({row}) => <div className="text-center">{row.getValue("updated_at")}</div>
   },
   {
     id: "actions",
     enableHiding: false,
+    header: () => <div className="text-center">Actions</div>,
     cell: ({ row }) => {
-      const payment = row.original
+      const employee = row.original
 
       return (
         <DropdownMenu>
@@ -123,7 +102,7 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(employee._id)}
             >
               Copy payment ID
             </DropdownMenuItem>
@@ -138,6 +117,33 @@ export const columns: ColumnDef<Payment>[] = [
 ]
 
 export default function AdminViewEmployees() {
+
+  const [employees, setEmployees] = React.useState<Employee[]>([])
+  const navigate = useNavigate()
+
+  async function fetchEmployees() {
+    const response = await fetch("http://localhost:8080/admin/get-all-employees", {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token"),
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+    if (response.status===400){
+      localStorage.removeItem("token")
+      navigate("/admin/login")
+    }
+
+    const data = await response.json()
+    console.log(data)
+    setEmployees(data)
+  }
+
+  useEffect(() => {
+    fetchEmployees()
+  }, [])
+
+
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -146,8 +152,10 @@ export default function AdminViewEmployees() {
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
+  
+
   const table = useReactTable({
-    data,
+    data: employees,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -166,7 +174,14 @@ export default function AdminViewEmployees() {
   })
 
   return (
-    <div className="w-full">
+    <div>
+      <AdminNav>
+      <div className="p-8">
+        <div className="flex justify-end">
+          <Link to="/admin/employee/add">
+            <Button className="" size={"sm"}>Add Employee</Button>
+          </Link>
+        </div>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
@@ -278,6 +293,11 @@ export default function AdminViewEmployees() {
         </div>
       </div>
     </div>
+  
+      
+      </AdminNav>
+    </div>
+   
   )
 }
 

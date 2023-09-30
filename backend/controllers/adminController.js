@@ -95,14 +95,27 @@ async function deleteEmployee(req, res) {
     }
 }
 
+// admin checkAuth
+async function checkAuth(req, res) {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+        const adminId = decodedToken._id;
+        const admin = await Admin.findById(adminId).select('-password');
+        res.status(200).json(admin);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 // admin login
 async function adminLogin(req, res) {
     try {
-        const admin = await Admin.findOne({ username: req.body.username, password: req.body.password });
+        const admin = await Admin.findOne({ email: req.body.email, password: req.body.password });
         if (admin) {
             // generate jwt token with 1 hour expiration
             const token = jwt.sign({ _id: admin._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token: token });
+            res.status(200).json({ token: token, message: 'Login successful' });
         } else {
             res.status(404).json({ message: 'Admin not found' });
         }
@@ -120,5 +133,6 @@ module.exports = {
     getEmployeeById,
     updateEmployee,
     deleteEmployee,
-    adminLogin
+    adminLogin,
+    checkAuth
 }

@@ -10,12 +10,16 @@ const bcrypt = require('bcrypt');
 // employee login
 async function employeeLogin(req, res) {
     try{
-        const decryptedPassword = await bcrypt.compare(req.body.password, req.employee.password);
-        if(!decryptedPassword){
+        const employee = await Employee.findOne({ email: req.body.email });
+        if(!employee){
+            return res.status(400).json({ message: 'Invalid email' });
+        }
+        const decryptedPassword = await bcrypt.compare(req.body.password, employee.password);
+        if (!decryptedPassword){
             return res.status(400).json({ message: 'Invalid password' });
         }
-        const token = jwt.sign({ _id: req.employee._id }, process.env.TOKEN_SECRET);
-        res.status(200).json({ token: token });
+        const token = jwt.sign({ _id: employee._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ token: token, message: 'Login successful', role: employee.role });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -31,6 +35,7 @@ async function changePassword(req, res) {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
         req.employee.password = hashedPassword;
+        req.employee.is_password_changed = true;
         await req.employee.save();
         res.status(200).json({ message: 'Password changed' });
     } catch (error) {
