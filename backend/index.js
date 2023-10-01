@@ -10,8 +10,12 @@ app.use(cors())
 
 // routes
 const adminRoutes = require('./routes/adminRoutes')
+const employeeRoutes = require('./routes/employeeRoutes')
+const organizerRoutes = require('./routes/organizerRoutes')
 
 app.use('/admin', adminRoutes)
+app.use('/employee', employeeRoutes)
+app.use('/organizer', organizerRoutes)
 
 
 require('dotenv').config()

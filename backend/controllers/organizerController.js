@@ -1,6 +1,6 @@
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const Organizer = require('../models/modules/organizerSchema');
 const Event = require('../models/eventSchema');
@@ -14,7 +14,6 @@ async function organizerRegister(req, res) {
             email: req.body.email,
             phone: req.body.phone,
             password: hashedPassword,
-            address: req.body.address
         });
         await organizer.save();
         res.status(200).json(organizer);

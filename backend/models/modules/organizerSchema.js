@@ -8,7 +8,7 @@ const organizerSchema = new mongoose.Schema({
     },
     phone: String,
     password: String,
-    address: String,
+    role: {type: String, default: 'organizer'},
     created_at : { type: Date, default: Date.now },
     updated_at : { type: Date, default: Date.now }
 })

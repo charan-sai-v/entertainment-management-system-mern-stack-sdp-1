@@ -48,7 +48,7 @@ export function TabsDemo() {
                 <a href="/user/forgot-password" className='hover:link text-orange-500'>
                     Forgot Password?
                 </a>
-                <a href="/user/register" className='hover:link text-blue-500'>
+                <a href="/register" className='hover:link text-blue-500'>
                     Register
                 </a>
             </div>
@@ -76,10 +76,10 @@ export function TabsDemo() {
               <Input id="password" type='password' placeholder='**********' />
             </div>
             <div className='flex items-center justify-between'>
-                <a href="/user/forgot-password" className='hover:link text-orange-500'>
+                <a href="/organizer/forgot-password" className='hover:link text-orange-500'>
                     Forgot Password?
                 </a>
-                <a href="/user/register" className='hover:link text-blue-500'>
+                <a href="/register" className='hover:link text-blue-500'>
                     Register
                 </a>
             </div>

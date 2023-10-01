@@ -76,6 +76,7 @@ export default class AdminLogin extends React.Component {
     const response = await data.json()
     if (data.status === 200) {
       localStorage.setItem('token', response.token)
+      localStorage.setItem('role', response.role)
       
       window.location.href = '/admin/dashboard'
     }

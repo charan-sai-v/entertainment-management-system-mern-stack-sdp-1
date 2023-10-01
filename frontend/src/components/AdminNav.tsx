@@ -39,7 +39,7 @@ export default function AdminNav({children}: {children: React.ReactNode}) {
                 <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label> 
                 <ul className="menu p-4 w-80 min-h-full bg-base-200">
                 {/* Sidebar content here */}
-                <Link to='/admin/employees' className="w-full justify-start"><Button variant="secondary">Employees</Button></Link>
+                <Link to='/employees' className="w-full justify-start"><Button variant="secondary">Employees</Button></Link>
                 <li><a>Sidebar Item 2</a></li>
                 </ul>
             </div>

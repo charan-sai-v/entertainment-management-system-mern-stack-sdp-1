@@ -2,7 +2,7 @@
 const Employee = require('../models/modules/employeeSchema');
 const Organizer = require('../models/modules/organizerSchema')
 const Event = require('../models/eventSchema')
-const User = require('../models/userSchema')
+const User = require('../models/modules/userSchema')
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');

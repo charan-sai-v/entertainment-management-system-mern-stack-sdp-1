@@ -115,7 +115,7 @@ async function adminLogin(req, res) {
         if (admin) {
             // generate jwt token with 1 hour expiration
             const token = jwt.sign({ _id: admin._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token: token, message: 'Login successful' });
+            res.status(200).json({ token: token, message: 'Login successful', role: 'admin' });
         } else {
             res.status(404).json({ message: 'Admin not found' });
         }

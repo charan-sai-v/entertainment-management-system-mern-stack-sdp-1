@@ -5,7 +5,7 @@ const router = express.Router()
 const employeeController = require('../controllers/employeeController')
 const employeeAuth = require('../middlewares/employee/employeeAuthMiddleware');
 
-router.post('/login', employeeAuth, employeeController.employeeLogin)
+router.post('/login', employeeController.employeeLogin)
 router.post('/change-password', employeeAuth, employeeController.changePassword)
 router.get('/organizers', employeeAuth, employeeController.viewAllOrganizer)
 router.get('/organizers/:id', employeeAuth, employeeController.viewOrganizerById)
