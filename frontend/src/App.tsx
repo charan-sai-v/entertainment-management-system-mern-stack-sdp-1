@@ -1,20 +1,30 @@
 import React from 'react'
-import HomePage from './pages/HomePage'
 import { ThemeProvider } from './components/theme-provider'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+// Routes
+import AdminPrivateRoute from './components/AdminPrivateRoute'
+import EmployeePrivateRoute from './components/EmployeePrivateRoute'
+import OrganizerPrivateRoute from './components/OrganizerPrivateRouter'
+import UserPrivateRoute from './components/UserPrivateRoute'
+
+import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import Dashbaord from './pages/user/UsersDashboard'
-import UserEventById from './pages/user/UserEventById'
+
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminAddEmployee from './pages/admin/AdminAddEmployee'
 import AdminViewEmployees from './pages/admin/AdminViewEmployees'
+import AdminAddEmployee from './pages/admin/AdminAddEmployee'
 
-import AdminPrivateRoute from './components/AdminPrivateRoute'
 import EmployeeLogin from './pages/employee/EmployeeLogin'
-import EmployeePrivateRoute from './components/EmployeePrivateRoute'
 import EmployeeDashboard from './pages/employee/EmployeeDashboard'
+
+import OrganizerDashboard from './pages/organizer/OrganizerDashboard'
+import OrganizerAddEvent from './pages/organizer/OrganizerAddEvent'
+
+import Dashbaord from './pages/user/UsersDashboard'
+import UserEventById from './pages/user/UserEventById'
 
 
 export default function App() {
@@ -25,10 +35,11 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path='/user/dashboard' element={<Dashbaord />} />
-          <Route path="/user/event/:id" element={<UserEventById />} />
-         
         </Routes>
+        <UserPrivateRoute>
+          <Route path='/dashboard' element={<Dashbaord />} />
+          <Route path="/event/:id" element={<UserEventById />} />
+        </UserPrivateRoute>
       </BrowserRouter>
 
       <BrowserRouter basename='/admin'>
@@ -51,6 +62,17 @@ export default function App() {
         </EmployeePrivateRoute>
       </BrowserRouter>
 
+      <BrowserRouter basename='/organizer'>
+        <Routes>
+          <Route path='/login' element={<LoginPage />} />
+        </Routes>
+        <OrganizerPrivateRoute>
+          <Route path='/organizerdashboard' element={<OrganizerDashboard />} />
+          <Route path='/organizer/add/event' element={<OrganizerAddEvent />} />
+        </OrganizerPrivateRoute>
+      </BrowserRouter>
+
+      
     </ThemeProvider>
   )
 }

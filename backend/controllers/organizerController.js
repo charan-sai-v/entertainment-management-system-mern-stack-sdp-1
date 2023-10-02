@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt');
 const Organizer = require('../models/modules/organizerSchema');
 const Event = require('../models/eventSchema');
 
+const multer = require('multer');
+
+
+
 // organizer register
 async function organizerRegister(req, res) {
     try {
@@ -25,36 +29,40 @@ async function organizerRegister(req, res) {
 // organizer login
 async function organizerLogin(req, res) {
     try {
-        // check if organizer exists
         const organizer = await Organizer.findOne({ email: req.body.email });
         if (!organizer) {
-            res.status(400).json({ message: 'Organizer does not exist' });
+            return res.status(400).json({ message: 'Organizer does not exist' });
         }
-        // check if password is correct
+
         const validPassword = await bcrypt.compare(req.body.password, organizer.password);
         if (!validPassword) {
-            res.status(400).json({ message: 'Password is incorrect' });
+            return res.status(400).json({ message: 'Password is incorrect' });
         }
-        // create and assign a token
+
         const token = jwt.sign({ _id: organizer._id }, process.env.TOKEN_SECRET);
-        res.status(200).json({ token: token });
+        return res.status(200).json({ token: token, role: 'organizer', message: 'Login successful', id: organizer._id });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
 
+
 // create an event
 async function createEvent(req, res) {
+    console.log(req.body);
     try {
+       
         const event = new Event({
             name: req.body.name,
             description: req.body.description,
             image: req.file.buffer,
-            start_date: req.body.start_date,
-            end_date: req.body.end_date,
+            start_date: req.body.startDate,
+            end_date: req.body.endDate,
             location: req.body.location,
             capacity: req.body.capacity,
+            price: req.body.price,
+            category: req.body.category,
             organizerId: req.body.organizerId,
             organizerName: req.body.organizerName
         });

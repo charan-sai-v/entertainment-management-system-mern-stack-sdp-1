@@ -1,6 +1,3 @@
-
-
-
 import React from 'react'
 import { ModeToggle } from './mode-toggle'
 import { Button } from './ui/button'

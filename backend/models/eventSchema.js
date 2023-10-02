@@ -10,6 +10,8 @@ const Event = new mongoose.Schema({
     end_date: Date,
     location: String,
     capacity: Number,
+    price: Number,
+    category: String,
     organizerId: String,
     organizerName: String
 })

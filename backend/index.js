@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const multer = require('multer')
 
 const app = express()
 
@@ -17,9 +18,10 @@ app.use('/admin', adminRoutes)
 app.use('/employee', employeeRoutes)
 app.use('/organizer', organizerRoutes)
 
-
+// dotenv
 require('dotenv').config()
 
+// environment variables
 const port = process.env.PORT
 const dbUrl = process.env.DB_URL
 
