@@ -1,14 +1,15 @@
 
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+
 
 // auth middleware for organizer
 async function organizerAuth(req, res, next) {
-    const token = req.header("Authorization")
-    if (!token) return res.status(401).json({ message: "Token not found" })
     
     try {
-        const verified = jwt.verify(token, process.env.JWT_SECRET)
-        req.organizer = verified
+        const token = req.header("Authorization").split(" ")[1]
+        if (!token) return res.status(401).json({ message: "Access Denied" })
+        const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+        req.id = verified._id
         next()
     } catch (error) {
         res.status(400).json({ message: "Invalid Token" })

@@ -22,9 +22,12 @@ import EmployeeDashboard from './pages/employee/EmployeeDashboard'
 
 import OrganizerDashboard from './pages/organizer/OrganizerDashboard'
 import OrganizerAddEvent from './pages/organizer/OrganizerAddEvent'
+import OrganizerEvents from './pages/organizer/OrganizerEvents' 
+import OrganizerEventById from './pages/organizer/OrganizerEventById'
 
 import Dashbaord from './pages/user/UsersDashboard'
 import UserEventById from './pages/user/UserEventById'
+import OrganizerEventEdit from './pages/organizer/OrganizerEventEdit'
 
 
 export default function App() {
@@ -67,8 +70,12 @@ export default function App() {
           <Route path='/login' element={<LoginPage />} />
         </Routes>
         <OrganizerPrivateRoute>
-          <Route path='/organizerdashboard' element={<OrganizerDashboard />} />
-          <Route path='/organizer/add/event' element={<OrganizerAddEvent />} />
+          <Route path='/dashboard' element={<OrganizerDashboard />} />
+          <Route path='/events' element={<OrganizerEvents />} />
+          <Route path='/event/add' element={<OrganizerAddEvent />} />
+          <Route path='/event/:id' element={<OrganizerEventById />} />
+          <Route path='/event/edit/:id' element={<OrganizerEventEdit />} />
+
         </OrganizerPrivateRoute>
       </BrowserRouter>
 

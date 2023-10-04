@@ -5,7 +5,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import React, { useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { Textarea } from "@/components/ui/textarea"
 
 
 
@@ -20,7 +21,9 @@ export default function OrganizerAddEvent() {
     const [capacity, setCapacity] = useState(0)
     const [category, setCategory] = useState("")
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
+
+    
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -29,53 +32,61 @@ export default function OrganizerAddEvent() {
     }
     
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const organizerId = localStorage.getItem("id")
-        const organizerName = "mohan sai"
-        const formData = new FormData()
-        formData.append("image", image!)
-        formData.append("name", name)
-        formData.append("description", description)
-        formData.append("startDate", startDate)
-        formData.append("endDate", endDate)
-        formData.append("location", location)
-        formData.append("price", price.toString())
-        formData.append("capacity", capacity.toString())
-        formData.append("category", category)
-        formData.append("organizerId", organizerId!)
-        formData.append("organizerName", organizerName)
-        // print the form data
+        e.preventDefault();
+        const organizerId = localStorage.getItem("id");
+        const organizerName = "mohan sai";
+        const formData = new FormData();
+    
+        if (!image) {
+            alert("Please select an image.");
+            return;
+        }
+    
+        formData.append("image", image);
+        formData.append("name", name);
+        formData.append("description", description);
+        formData.append("startDate", startDate);
+        formData.append("endDate", endDate);
+        formData.append("location", location);
+        formData.append("price", price.toString());
+        formData.append("capacity", capacity.toString());
+        formData.append("category", category);
+        formData.append("organizerId", organizerId!);
+        formData.append("organizerName", organizerName);
+    
+        // Print the form data
         for (const pair of formData.entries()) {
             console.log(pair[0] + ', ' + pair[1]);
         }
-        const response = await fetch('http://localhost:8080/organizer/create-event', {
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token"),
-                "Content-Type": "multipart/form-data",
-
-            },
-            method: "POST",
-            body: formData
-        })
-        const resData = await response.json()
-        console.log(resData)
-    }
-
     
-
+        try {
+            const response = await fetch('http://localhost:8080/organizer/create-event', {
+                method: "POST",
+                body: formData
+            });
+            if (response.status===200) {
+                alert("Event added successfully");
+                navigate('/events');
+            }
+        } catch (error) {
+            console.log(error);
+            alert("Error adding event");
+        }
+    }
+    
     return (
         <div>
             <NavBar />
             <h2 className='text-center text-2xl font-bold  mt-20'>Add Event</h2>
             <div className='flex item-center justify-center  '>
-                <form className='w-full max-w-sm space-y-4 mb-10' onSubmit={handleSubmit} encType='multipart/form-data' >
+                <form className='w-full max-w-sm space-y-4 mb-10' onSubmit={handleSubmit} >
                     <div>
                         <Label htmlFor='name'>Name</Label>
                         <Input id="name" name='name' type='text' onChange={(e)=>setName(e.target.value)} required />                        
                     </div>
                     <div>
                         <Label htmlFor='description'>Description</Label>
-                        <Input id="description" name='description' type='text' onChange={(e)=>setDescription(e.target.value)} required />
+                        <Textarea id="description" name='description' onChange={(e)=>setDescription(e.target.value)} required />
                     </div>
                     <div>
                         <Label htmlFor='image'>Image</Label>

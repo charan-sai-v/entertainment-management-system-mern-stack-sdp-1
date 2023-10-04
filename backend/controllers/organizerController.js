@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const Organizer = require('../models/modules/organizerSchema');
 const Event = require('../models/eventSchema');
 
-const multer = require('multer');
-
 
 
 // organizer register
@@ -39,7 +37,7 @@ async function organizerLogin(req, res) {
             return res.status(400).json({ message: 'Password is incorrect' });
         }
 
-        const token = jwt.sign({ _id: organizer._id }, process.env.TOKEN_SECRET);
+        const token = jwt.sign({ _id: organizer._id }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
         return res.status(200).json({ token: token, role: 'organizer', message: 'Login successful', id: organizer._id });
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -50,21 +48,24 @@ async function organizerLogin(req, res) {
 
 // create an event
 async function createEvent(req, res) {
-    console.log(req.body);
+    console.log(req.file);
     try {
-       
+       const organizer = await Organizer.findOne({ _id: req.id });
+       const organizerName = organizer.name;
+         const organizerCompany = organizer.company;
         const event = new Event({
             name: req.body.name,
             description: req.body.description,
-            image: req.file.buffer,
+            image: `http://localhost:8080/uploads/events/${req.file.filename}`,
             start_date: req.body.startDate,
             end_date: req.body.endDate,
             location: req.body.location,
             capacity: req.body.capacity,
             price: req.body.price,
             category: req.body.category,
-            organizerId: req.body.organizerId,
-            organizerName: req.body.organizerName
+            organizerId: req.id,
+            organizerName: organizerName,
+            organizerCompany: organizerCompany
         });
         await event.save();
         res.status(200).json(event);
@@ -75,10 +76,11 @@ async function createEvent(req, res) {
 
 
 // get all organizer events
-async function getAllEvents(req, res) {
+async function getEvents(req, res) {
     try {
-        const events = await Event.find({ organizerId: req.params.id });
+        const events = await Event.find({ organizerId: req.id });
         res.status(200).json(events);
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -89,6 +91,13 @@ async function getAllEvents(req, res) {
 async function getEventById(req, res) {
     try {
         const event = await Event.findById(req.params.id);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        if (event.organizerId.toString() !== req.id) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+        
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -123,16 +132,18 @@ async function updateEvent(req, res) {
 async function deleteEvent(req, res) {
     try {
         const event = await Event.findById(req.params.id);
+        
         if (event) {
             // check if organizer is the owner of the event
-            if (event.organizerId !== req.body.organizerId) {
+            if (event.organizerId.toString() !== req.id) {
                 res.status(401).json({ message: 'Unauthorized' });
             }
-            await event.remove();
-            res.status(200).json({ message: 'Event deleted successfully' });
+            await event.deleteOne();
+            res.status(200).json({ message: 'Event deleted' });
         } else {
             res.status(404).json({ message: 'Event not found' });
         }
+        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -144,7 +155,7 @@ module.exports = {
     organizerLogin,
     organizerRegister,
     createEvent,
-    getAllEvents,
+    getEvents,
     getEventById,
     updateEvent,
     deleteEvent

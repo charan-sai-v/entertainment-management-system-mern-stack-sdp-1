@@ -1,12 +1,14 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 const cors = require('cors')
-const multer = require('multer')
 
 const app = express()
 
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
+app.use(express.json())
+// public folder
+app.use('/uploads', express.static('uploads'))
 app.use(cors())
 
 // routes

@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 
 // auth middleware for admin
 async function adminAuth(req, res, next) {
-    // bearer token
     
     try {
         const token = req.header("Authorization").split(" ")[1]
