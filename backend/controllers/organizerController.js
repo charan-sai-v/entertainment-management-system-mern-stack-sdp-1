@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const Organizer = require('../models/modules/organizerSchema');
 const Event = require('../models/eventSchema');
+const moment = require('moment-timezone');
 
 
 
@@ -16,6 +17,7 @@ async function organizerRegister(req, res) {
             email: req.body.email,
             phone: req.body.phone,
             password: hashedPassword,
+            company: req.body.company
         });
         await organizer.save();
         res.status(200).json(organizer);
@@ -48,28 +50,37 @@ async function organizerLogin(req, res) {
 
 // create an event
 async function createEvent(req, res) {
-    console.log(req.file);
     try {
-       const organizer = await Organizer.findOne({ _id: req.id });
-       const organizerName = organizer.name;
-         const organizerCompany = organizer.company;
+        const organizer = await Organizer.findOne({ _id: req.id });
+        const organizerName = organizer.name;
+        const organizerCompany = organizer.company;
+        const startRegistrationDate = new Date(req.body.startRegistrationDate);
+        const endRegistrationDate = new Date(req.body.endRegistrationDate);
+        const startDate = new Date(req.body.startDate);
+        const endDate = new Date(req.body.endDate);
         const event = new Event({
             name: req.body.name,
             description: req.body.description,
             image: `http://localhost:8080/uploads/events/${req.file.filename}`,
-            start_date: req.body.startDate,
-            end_date: req.body.endDate,
+            start_date: startDate,
+            end_date: endDate,
+            start_registration: startRegistrationDate,
+            end_registration: endRegistrationDate,
+            cancel_deadline: new Date(req.body.cancelDeadline),
             location: req.body.location,
             capacity: req.body.capacity,
             price: req.body.price,
             category: req.body.category,
             organizerId: req.id,
             organizerName: organizerName,
-            organizerCompany: organizerCompany
+            organizerCompany: organizerCompany,
+            created_at: moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss'),
+            updated_at: moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss')
         });
         await event.save();
         res.status(200).json(event);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 }
@@ -80,7 +91,6 @@ async function getEvents(req, res) {
     try {
         const events = await Event.find({ organizerId: req.id });
         res.status(200).json(events);
-
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

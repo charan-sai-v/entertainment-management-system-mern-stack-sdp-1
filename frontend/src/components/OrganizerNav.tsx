@@ -5,8 +5,16 @@ import React from 'react'
 import { ModeToggle } from './mode-toggle'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function OrganizerNav({children}: {children: React.ReactNode}) {
+    const navigate = useNavigate()
+    const logout = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('id')
+        localStorage.removeItem('role')
+        navigate('/login')
+    }
   return (
     <div>
          <div className="w-full navbar bg-base-300">
@@ -25,6 +33,7 @@ export default function OrganizerNav({children}: {children: React.ReactNode}) {
                 </div>
                 <div className='navbar-end'>
                     <ModeToggle />
+                    <Button className='w-fit ml-3' variant='ghost' onClick={logout}>Logout</Button>
                 </div>
         </div>
         <div className="drawer  lg:drawer-open">
@@ -35,11 +44,12 @@ export default function OrganizerNav({children}: {children: React.ReactNode}) {
                 {/* Page content here */}
                 {children}
             </div> 
-            <div className="drawer-side">
+            <div className="drawer-side border-r-2">
                 <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label> 
-                <ul className="menu p-4 w-80 min-h-full bg-base-200">
+                <ul className="menu p-4 w-80 min-h-full gap-1">
                 {/* Sidebar content here */}
-                <Link to='/employees' className="w-full justify-start"><Button variant="secondary">Employees</Button></Link>
+                <Link to='/dashboard' className="w-full justify-start"><Button variant="ghost">Dashboard</Button></Link>
+                <Link to='/events' className="w-full justify-start"><Button variant="ghost">Events</Button></Link>
                 <li><a>Sidebar Item 2</a></li>
                 </ul>
             </div>

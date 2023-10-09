@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 const Event = new mongoose.Schema({
     name: {
         type: String,
@@ -14,8 +15,8 @@ const Event = new mongoose.Schema({
         type: String,
         required: true
     },
-    created_at : { type: Date, default: Date.now },
-    updated_at : { type: Date, default: Date.now },
+    created_at : { type: Date },
+    updated_at : { type: Date },
     start_date: {
         type: Date,
         required: true
@@ -29,6 +30,7 @@ const Event = new mongoose.Schema({
             message: 'End date must be greater than start date'
         },
     },
+
     location: {
         type: String,
         required: true
@@ -41,7 +43,7 @@ const Event = new mongoose.Schema({
         type: Number,
         required: true
     },
-    no_of_bookings: {
+    no_of_participants: {
         type: Number,
         default: 0
     },
@@ -63,6 +65,15 @@ const Event = new mongoose.Schema({
         // enum: ['Music', 'Sport', 'Food', 'Art', 'Fashion', 'Technology', 'Education', 'Other'],
         required: true
     },
+    cancel_deadline: {
+        type: Date,
+        validate: {
+            validator: function (value) {
+                return this.start_date > value;
+            },
+            message: 'Cancel deadline must be less than start date'
+        },
+    },
     organizerId: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
@@ -74,7 +85,34 @@ const Event = new mongoose.Schema({
         type: String,
         required: true
     },
+    is_active: {
+        type: Boolean,
+        default: true
+    },
+    is_approved: {
+        type: Boolean,
+        default: false
+    },
+    is_rejected: {
+        type: Boolean,
+        default: false
+    },
+    is_cancelled: {
+        type: Boolean,
+        default: false
+    },
+    is_deleted: {
+        type: Boolean,
+        default: false
+    },
+    is_full: {
+        type: Boolean,
+        default: false
+    }
 })
+
+
+
 
 module.exports = mongoose.model('Event', Event)
     

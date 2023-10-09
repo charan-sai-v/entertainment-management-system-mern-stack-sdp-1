@@ -15,10 +15,12 @@ app.use(cors())
 const adminRoutes = require('./routes/adminRoutes')
 const employeeRoutes = require('./routes/employeeRoutes')
 const organizerRoutes = require('./routes/organizerRoutes')
+const userRoutes = require('./routes/userRoutes')
 
 app.use('/admin', adminRoutes)
 app.use('/employee', employeeRoutes)
 app.use('/organizer', organizerRoutes)
+app.use('/user', userRoutes)
 
 // dotenv
 require('dotenv').config()
@@ -52,4 +54,18 @@ db.once('open', () => {
 app.listen(port, ()=>{
     console.log("Server is running on port 8080")
 })
+
+
+// print date and time in india time zone
+const date = new Date()
+const options = {
+  timeZone: 'Asia/Kolkata',
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',6
+  minute: 'numeric'
+};
+const formatter = new Intl.DateTimeFormat([], options);
+console.log(formatter.format(date));
 

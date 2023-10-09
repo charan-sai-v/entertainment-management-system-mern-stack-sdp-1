@@ -1,11 +1,12 @@
 
 
-import { Navigate, Routes  } from 'react-router-dom'
+import { Routes  } from 'react-router-dom'
 
 export default function OrganizerPrivateRoute({children}: {children: React.ReactNode}) {
   const token = localStorage.getItem('token')
   if (!token) {
-    return <Navigate to='/login' />
+    window.location.href = '/login'
+    return null
   }
   return (
     <Routes>

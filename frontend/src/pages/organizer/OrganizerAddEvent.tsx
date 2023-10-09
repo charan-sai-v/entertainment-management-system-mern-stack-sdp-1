@@ -20,6 +20,8 @@ export default function OrganizerAddEvent() {
     const [price, setPrice] = useState(0)
     const [capacity, setCapacity] = useState(0)
     const [category, setCategory] = useState("")
+    const [startRegistrationDate, setStartRegistrationDate] = useState("")
+    const [endRegistrationDate, setEndRegistrationDate] = useState("")
 
     const navigate = useNavigate()
 
@@ -33,8 +35,6 @@ export default function OrganizerAddEvent() {
     
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const organizerId = localStorage.getItem("id");
-        const organizerName = "mohan sai";
         const formData = new FormData();
     
         if (!image) {
@@ -51,16 +51,19 @@ export default function OrganizerAddEvent() {
         formData.append("price", price.toString());
         formData.append("capacity", capacity.toString());
         formData.append("category", category);
-        formData.append("organizerId", organizerId!);
-        formData.append("organizerName", organizerName);
+        formData.append("startRegistrationDate", startRegistrationDate);
+        formData.append("endRegistrationDate", endRegistrationDate);
     
         // Print the form data
         for (const pair of formData.entries()) {
             console.log(pair[0] + ', ' + pair[1]);
         }
-    
+        
         try {
             const response = await fetch('http://localhost:8080/organizer/create-event', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
                 method: "POST",
                 body: formData
             });
@@ -93,12 +96,22 @@ export default function OrganizerAddEvent() {
                         <Input id="image" name='image' type='file' onChange={handleImage} required accept='image/*' />
                     </div>
                     <div>
-                        <Label htmlFor='startDate'>Start Date</Label>
-                        <Input id="startDate" name='startDate' type='date' onChange={(e)=>setStartDate(e.target.value)} required />
+                        <Label htmlFor='startRegistrationDate'>Registration Start Date</Label>
+                        <Input id="startRegistrationDate" name='startRegistrationDate' type='datetime-local' 
+                         onChange={(e)=>setStartRegistrationDate(e.target.value)} required min={new Date().toISOString().slice(0,16)} />
                     </div>
                     <div>
-                        <Label htmlFor='endDate'>End Date</Label>
-                        <Input id="endDate" name='endDate' type='date' onChange={(e)=>setEndDate(e.target.value)} required />
+                        <Label htmlFor='endRegistrationDate'>Registration End Date</Label>
+                        <Input id="endRegistrationDate" name='endRegistrationDate' type='datetime-local' min={startRegistrationDate}
+                         onChange={(e)=>setEndRegistrationDate(e.target.value)} required />
+                    </div>
+                    <div>
+                        <Label htmlFor='startDate'>Event Start Date</Label>
+                        <Input id="startDate" name='startDate' type='datetime-local' onChange={(e)=>setStartDate(e.target.value)} required min={endRegistrationDate} />
+                    </div>
+                    <div>
+                        <Label htmlFor='endDate'>Event End Date</Label>
+                        <Input id="endDate" name='endDate' type='datetime-local' onChange={(e)=>setEndDate(e.target.value)} required min={startDate} />
                     </div>
                     <div>
                         <Label htmlFor='location'>Location</Label>
@@ -112,6 +125,7 @@ export default function OrganizerAddEvent() {
                         <Label htmlFor='capacity'>Capacity</Label>
                         <Input id="capacity" name='capacity' type='number' onChange={(e)=>setCapacity(parseInt(e.target.value))} required />
                     </div>
+                    
                     <div>
                         <Label htmlFor='category'>Category</Label>
                         <Select onValueChange={(e)=>setCategory(e)} required>

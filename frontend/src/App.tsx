@@ -25,24 +25,21 @@ import OrganizerAddEvent from './pages/organizer/OrganizerAddEvent'
 import OrganizerEvents from './pages/organizer/OrganizerEvents' 
 import OrganizerEventById from './pages/organizer/OrganizerEventById'
 
-import Dashbaord from './pages/user/UsersDashboard'
 import UserEventById from './pages/user/UserEventById'
 import OrganizerEventEdit from './pages/organizer/OrganizerEventEdit'
+import UserDashboard from './pages/user/UserDashboard'
+import UserBookings from './pages/user/UserBookings'
 
 
 export default function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="theme">
-      <BrowserRouter>
+      <BrowserRouter >
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
-        <UserPrivateRoute>
-          <Route path='/dashboard' element={<Dashbaord />} />
-          <Route path="/event/:id" element={<UserEventById />} />
-        </UserPrivateRoute>
       </BrowserRouter>
 
       <BrowserRouter basename='/admin'>
@@ -66,17 +63,21 @@ export default function App() {
       </BrowserRouter>
 
       <BrowserRouter basename='/organizer'>
-        <Routes>
-          <Route path='/login' element={<LoginPage />} />
-        </Routes>
         <OrganizerPrivateRoute>
           <Route path='/dashboard' element={<OrganizerDashboard />} />
           <Route path='/events' element={<OrganizerEvents />} />
           <Route path='/event/add' element={<OrganizerAddEvent />} />
           <Route path='/event/:id' element={<OrganizerEventById />} />
           <Route path='/event/edit/:id' element={<OrganizerEventEdit />} />
-
         </OrganizerPrivateRoute>
+      </BrowserRouter>
+
+      <BrowserRouter basename='/user'>
+        <UserPrivateRoute>
+          <Route path='/dashboard' element={<UserDashboard />} />
+          <Route path='/event/:id' element={<UserEventById />} />
+          <Route path='/bookings' element={<UserBookings />} />
+        </UserPrivateRoute>
       </BrowserRouter>
 
       

@@ -35,6 +35,7 @@ export function TabsDemo() {
   const [password, setPassword] = React.useState("")
   const [name, setName] = React.useState("")
   const [phone, setPhone] = React.useState("")
+  const [company, setCompany] = React.useState("")
 
   const userHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -51,7 +52,7 @@ export function TabsDemo() {
       })
       const response = await data.json()
       if (data.status === 200) {
-        navigate('/user/login')
+        navigate('/login')
       }else{
         alert('Email already exist')
       }
@@ -69,12 +70,13 @@ export function TabsDemo() {
           name,
           email,
           password,
-          phone
+          phone,
+          company
         })
       })
       const response = await data.json()
       if (data.status === 200) {
-        navigate('/organizer/login')
+        navigate('/login')
       } else {
         alert('Email already exist')
       }
@@ -155,12 +157,13 @@ export function TabsDemo() {
               <Label htmlFor="password">Password</Label>
               <Input id="password" type='password' placeholder='**********' value={password} onChange={(e) => setPassword(e.target.value)} required/>
             </div>
+            <div className='space-y-1'>
+              <Label htmlFor='company'>Company (Optional)</Label>
+              <Input id="company" type='text' placeholder='Company (Optional)' value={company} onChange={(e)=> setCompany(e.target.value)} />
+            </div>
             <div className='flex items-center justify-between mb-3'>
-                <a href="/user/forgot-password" className='hover:link text-orange-500'>
-                    Forgot Password?
-                </a>
-                <a href="/user/register" className='hover:link text-blue-500'>
-                    Register
+                <a href="/organizer/register" className='hover:link text-blue-500'>
+                    Already have an Account?
                 </a>
             </div>
             <div className='space-y-1'>

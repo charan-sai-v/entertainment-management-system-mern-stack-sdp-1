@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Link } from 'react-router-dom'
 import { MoreVerticalIcon, Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 type Event = {
   _id: number
@@ -46,6 +47,8 @@ export default function OrganizerEvents() {
   const [filteredEvents, setFilteredEvents] = React.useState<Event[]>([])
   const [searchValue, setSearchValue] = React.useState('')
 
+  const navigate = useNavigate()
+
 
   useEffect(() => {
     const getEvents = async () => {
@@ -57,6 +60,9 @@ export default function OrganizerEvents() {
           }
         })
         const data = await response.json()
+        if (response.status !== 200) {
+          navigate('/login')
+        }
         console.log(data)
         setEvents(data)
         setFilteredEvents(data)
@@ -67,7 +73,7 @@ export default function OrganizerEvents() {
       }
     }
     getEvents()
-  }, [])
+  }, [navigate])
 
   // formatted date - 05-OCT-2023
   const formatDate = (date: string) => {

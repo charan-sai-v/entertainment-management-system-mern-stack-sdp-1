@@ -1,6 +1,5 @@
 import OrganizerNav from '@/components/OrganizerNav'
 import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
 import {
   Calendar,
   Grid2X2, IndianRupee, Users, MapPin
@@ -15,6 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from '@/components/ui/button'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+
 
 type Event = {
     _id: string
@@ -23,18 +24,24 @@ type Event = {
     image: string
     start_date: string
     end_date: string
+    start_registration: string
+    end_registration: string
     location: string
     price: number
     capacity: number
+    no_of_participants: number
     category: string
     organizerId: string
     organizerName: string
+    organizerCompany: string
 }
 
 export default function OrganizerEventById() {
    const { id } = useParams<{ id: string }>()
    const [loading, setLoading] = useState(true)
     const [event, setEvent] = useState<Event | null>(null)
+
+    const navigate = useNavigate()
 
     React.useEffect(() => {
         const fetchEvent = async () => {
@@ -47,6 +54,12 @@ export default function OrganizerEventById() {
                     }
                 })
                 const data = await response.json()
+                if (data.message === 'Unauthorized') {
+                    navigate('/login')
+                }
+                if (data.message === 'Invalid Token') {
+                    navigate('/login')
+                }
                 console.log(data)
                 setEvent(data)
                 setLoading(false)
@@ -55,14 +68,16 @@ export default function OrganizerEventById() {
             }
         }
         fetchEvent()
-    }, [id])
+    }, [id, navigate])
 
     const formatDate = (date: string | undefined) => {
       const dataObject = new Date(date as string)
       const year = dataObject.getFullYear()
       const month = dataObject.toLocaleString('default', { month: 'short' })
       const day = dataObject.getDate()
-      return `${day}-${month}-${year}`
+      // format hour-minutes-pm/am
+      const time = dataObject.toLocaleString('default', { hour: 'numeric', minute: 'numeric', hour12: true })
+      return `${day}-${month}-${year} ${time}`
     }
 
     if (loading) {
@@ -89,7 +104,7 @@ export default function OrganizerEventById() {
                     <Grid2X2 className='inline-block -mt-0.5 w-4 h-4 mr-1' />
                     Category
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm  text-muted-foreground">
                     {event?.category}
                   </p>
                 </div>
@@ -112,6 +127,20 @@ export default function OrganizerEventById() {
                 <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">
+                    <Users className='inline-block w-4 h-4 mr-1' /> 
+                    Number of Participants
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {event?.no_of_participants}
+                  </p>
+                </div>
+              </div>
+
+
+              <div className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">
                     <IndianRupee className='inline-block w-4 h-4 mr-1' />
                     Price
                   </p>
@@ -126,7 +155,33 @@ export default function OrganizerEventById() {
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">
                     <Calendar className='inline-block w-4 h-4 mr-1' />
-                    Start Date
+                    Registration Start Date
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDate(event?.start_registration)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    <Calendar className='inline-block w-4 h-4 mr-1' />
+                    Registration End Date
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDate(event?.end_registration)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    <Calendar className='inline-block w-4 h-4 mr-1' />
+                    Event Start Date
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {formatDate(event?.start_date)}
@@ -139,7 +194,7 @@ export default function OrganizerEventById() {
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">
                     <Calendar className='inline-block w-4 h-4 mr-1 -mt-0.5' />
-                    End Date
+                    Event End Date
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {formatDate(event?.end_date)}

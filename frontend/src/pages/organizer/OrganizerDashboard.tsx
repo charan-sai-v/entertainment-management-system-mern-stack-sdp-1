@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import OrganizerNav from '@/components/OrganizerNav'
 
 export default function OrganizerDashboard() {
   const navigate = useNavigate()
@@ -12,6 +13,12 @@ export default function OrganizerDashboard() {
     }
   }, [navigate])
   return (
-    <div>OrganizerDashboard</div>
+    <div>
+      <OrganizerNav>
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h1 className="text-4xl font-bold">Organizer Dashboard</h1>
+        </div>
+      </OrganizerNav>
+    </div>
   )
 }

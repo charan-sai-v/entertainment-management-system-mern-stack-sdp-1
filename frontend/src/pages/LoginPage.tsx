@@ -43,6 +43,13 @@ export function TabsDemo() {
       })
       const data = await res.json()
       console.log(data)
+      if (res.status === 200) {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('id', data.id)
+        navigate('/user/dashboard')
+      } else {
+        alert("Invalid Credentials")
+      }
     } catch (error) {
       console.log(error)
     }
@@ -63,7 +70,7 @@ export function TabsDemo() {
         localStorage.setItem('token', data.token)
         localStorage.setItem('role', data.role)
         localStorage.setItem('id', data.id)
-        navigate('/dashboard')
+        navigate('/organizer/dashboard')
       } else {
         alert("Invalid Credentials")
       }
