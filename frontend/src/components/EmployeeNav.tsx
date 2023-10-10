@@ -39,9 +39,11 @@ export default function EmployeeNav({children}: {children: React.ReactNode}) {
                 <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label> 
                 <ul className="menu p-4 w-80 min-h-full bg-base-200">
                 {/* Sidebar content here */}
+                <Link to='/dashboard' className="w-full justify-start"><Button variant="outline">Dashboard</Button></Link>
+                <Link to='/events' className="w-full justify-start"><Button variant="outline">Events</Button></Link>
                 <Link to='/organizers' className="w-full justify-start"><Button variant="outline">Organizers</Button></Link>
-                
-                <li><a>Sidebar Item 2</a></li>
+                <Link to='/bookings' className="w-full justify-start"><Button variant="outline">Bookings</Button></Link>
+                <Link to='/users' className="w-full justify-start"><Button variant="outline">Users</Button></Link>
                 </ul>
             </div>
         </div>

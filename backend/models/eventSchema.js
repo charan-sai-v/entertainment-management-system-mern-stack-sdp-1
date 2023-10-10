@@ -69,9 +69,9 @@ const Event = new mongoose.Schema({
         type: Date,
         validate: {
             validator: function (value) {
-                return this.start_date > value;
+                return this.start_registration < value;
             },
-            message: 'Cancel deadline must be less than start date'
+            message: 'Cancel deadline must be greater than start registration'
         },
     },
     organizerId: {

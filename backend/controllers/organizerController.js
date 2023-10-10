@@ -50,6 +50,7 @@ async function organizerLogin(req, res) {
 
 // create an event
 async function createEvent(req, res) {
+    console.log(req.body);
     try {
         const organizer = await Organizer.findOne({ _id: req.id });
         const organizerName = organizer.name;
@@ -58,6 +59,7 @@ async function createEvent(req, res) {
         const endRegistrationDate = new Date(req.body.endRegistrationDate);
         const startDate = new Date(req.body.startDate);
         const endDate = new Date(req.body.endDate);
+        const cancelDeadline = new Date(req.body.cancel_deadline);
         const event = new Event({
             name: req.body.name,
             description: req.body.description,
@@ -66,7 +68,7 @@ async function createEvent(req, res) {
             end_date: endDate,
             start_registration: startRegistrationDate,
             end_registration: endRegistrationDate,
-            cancel_deadline: new Date(req.body.cancelDeadline),
+            cancel_deadline: cancelDeadline,
             location: req.body.location,
             capacity: req.body.capacity,
             price: req.body.price,

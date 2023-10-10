@@ -19,6 +19,8 @@ import AdminAddEmployee from './pages/admin/AdminAddEmployee'
 
 import EmployeeLogin from './pages/employee/EmployeeLogin'
 import EmployeeDashboard from './pages/employee/EmployeeDashboard'
+import EmployeeViewEvents from './pages/employee/EmployeeViewEvents'
+import EmployeeEventById from './pages/employee/EmployeeEventById'
 
 import OrganizerDashboard from './pages/organizer/OrganizerDashboard'
 import OrganizerAddEvent from './pages/organizer/OrganizerAddEvent'
@@ -59,6 +61,8 @@ export default function App() {
         </Routes>
         <EmployeePrivateRoute>
           <Route path='/dashboard' element={<EmployeeDashboard />} />
+          <Route path='/events' element={<EmployeeViewEvents />} />
+          <Route path='/event/:id' element={<EmployeeEventById />} />
         </EmployeePrivateRoute>
       </BrowserRouter>
 

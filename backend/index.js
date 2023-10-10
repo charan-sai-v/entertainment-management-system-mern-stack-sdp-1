@@ -63,7 +63,7 @@ const options = {
   year: 'numeric',
   month: 'numeric',
   day: 'numeric',
-  hour: 'numeric',6
+  hour: 'numeric',
   minute: 'numeric'
 };
 const formatter = new Intl.DateTimeFormat([], options);

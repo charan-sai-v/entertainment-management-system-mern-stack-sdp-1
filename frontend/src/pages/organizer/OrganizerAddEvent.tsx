@@ -22,6 +22,7 @@ export default function OrganizerAddEvent() {
     const [category, setCategory] = useState("")
     const [startRegistrationDate, setStartRegistrationDate] = useState("")
     const [endRegistrationDate, setEndRegistrationDate] = useState("")
+    const [cancel_deadline, setCancel_deadline] = useState("")
 
     const navigate = useNavigate()
 
@@ -53,6 +54,7 @@ export default function OrganizerAddEvent() {
         formData.append("category", category);
         formData.append("startRegistrationDate", startRegistrationDate);
         formData.append("endRegistrationDate", endRegistrationDate);
+        formData.append("cancel_deadline", cancel_deadline);
     
         // Print the form data
         for (const pair of formData.entries()) {
@@ -67,10 +69,18 @@ export default function OrganizerAddEvent() {
                 method: "POST",
                 body: formData
             });
+            const data = await response.json();
             if (response.status===200) {
                 alert("Event added successfully");
                 navigate('/events');
             }
+            if (data.message === 'Invalid Token') {
+                alert("Session expired. Please login again.");
+                localStorage.removeItem('token');
+                localStorage.removeItem('id');
+                navigate('/login');
+            }
+            
         } catch (error) {
             console.log(error);
             alert("Error adding event");
@@ -112,6 +122,10 @@ export default function OrganizerAddEvent() {
                     <div>
                         <Label htmlFor='endDate'>Event End Date</Label>
                         <Input id="endDate" name='endDate' type='datetime-local' onChange={(e)=>setEndDate(e.target.value)} required min={startDate} />
+                    </div>
+                    <div>
+                        <Label htmlFor='cancel_deadline'>Cancellation Deadline - For users to cancel their bookings</Label>
+                        <Input id="cancel_deadline" name='cancel_deadline' type='datetime-local' onChange={(e)=>setCancel_deadline(e.target.value)} required min={startRegistrationDate} max={startDate} />
                     </div>
                     <div>
                         <Label htmlFor='location'>Location</Label>

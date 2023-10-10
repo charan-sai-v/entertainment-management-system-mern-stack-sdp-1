@@ -68,7 +68,17 @@ async function viewOrganizerById(req, res) {
 // view all events
 async function viewAllEvents(req, res) {
     try {
-        const events = await Event.findAll();
+        const events = await Event.find().sort({start_date: 1});
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+// view all events with not approved status
+async function viewAllEventsNotApproved(req, res) {
+    try {
+        const events = await Event.findAll({is_approved: false}).sort({start_date: 1});
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -79,6 +89,24 @@ async function viewAllEvents(req, res) {
 async function viewEventById(req, res) {
     try {
         const event = await Event.findById(req.params.id)
+        res.status(200).json(event);
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+// update the event status
+async function updateEventStatus(req, res) {
+    console.log(req.body)
+    try {
+        const event = await Event.findById(req.params.id);
+        if (event) {
+            const is_approved = req.body.is_approved === 'true';
+            const is_rejected = req.body.is_rejected === 'true';
+            event.is_approved = is_approved;
+            event.is_rejected = is_rejected;
+        }
+        await event.save();
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -116,5 +144,6 @@ module.exports = {
     viewAllEvents,
     viewEventById,
     viewAllUsers,
-    viewUserById
+    viewUserById,
+    updateEventStatus
 }
