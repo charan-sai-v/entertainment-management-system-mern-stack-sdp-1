@@ -16,6 +16,7 @@ async function createEmployee(req, res) {
         const employeeExists = await Employee.findOne({ email: req.body.email });
         if (employeeExists) {
             res.status(400).json({ message: 'Employee already exists' });
+            return;
         }
         // encrypt the password from the request body
         const salt = await bcrypt.genSalt(10);

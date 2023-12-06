@@ -31,6 +31,7 @@ import UserEventById from './pages/user/UserEventById'
 import OrganizerEventEdit from './pages/organizer/OrganizerEventEdit'
 import UserDashboard from './pages/user/UserDashboard'
 import UserBookings from './pages/user/UserBookings'
+import UserVerify from './pages/user/UserVerify'
 
 
 export default function App() {
@@ -41,50 +42,39 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-        </Routes>
-      </BrowserRouter>
 
-      <BrowserRouter basename='/admin'>
-        <Routes>
+          {/* Admin Routes */}
           <Route path='/login' element={<AdminLogin />} />
-        </Routes>
-        <AdminPrivateRoute>
-            <Route path='/dashboard' element={<AdminDashboard />} />
-            <Route path='/employee/add' element={<AdminAddEmployee />} />
-            <Route path='/employees' element={<AdminViewEmployees />} />
-          </AdminPrivateRoute>
-      </BrowserRouter>
+          {/* Admin Private Routes */}
+          <Route path='/admin/dashboard' element={<AdminPrivateRoute><AdminDashboard /></AdminPrivateRoute> } />
+          <Route path='/admin/employee/add' element={<AdminPrivateRoute><AdminAddEmployee /></AdminPrivateRoute> } />
+          <Route path='/admin/employees' element={<AdminPrivateRoute><AdminViewEmployees /></AdminPrivateRoute>} />
 
-      <BrowserRouter basename='/employee'>
-        <Routes>
+
+          {/* Employee Routes */}
           <Route path='/login' element={<EmployeeLogin />} />
+          {/* Employee Private Routes */}
+            <Route path='/employee/dashboard' element={<EmployeePrivateRoute><EmployeeDashboard /></EmployeePrivateRoute> } />
+            <Route path='/employee/events' element={<EmployeePrivateRoute><EmployeeViewEvents /></EmployeePrivateRoute>} />
+            <Route path='/employee/event/:id' element={<EmployeePrivateRoute><EmployeeEventById/> </EmployeePrivateRoute> } />
+
+          {/* Organizer Routes */}
+          {/* Organizer Private Routes */}
+          <Route path='/organizer/dashboard' element={<OrganizerPrivateRoute><OrganizerDashboard /></OrganizerPrivateRoute> } />
+          <Route path='/organizer/events' element={<OrganizerPrivateRoute><OrganizerEvents /></OrganizerPrivateRoute>} />
+          <Route path='/organizer/event/add' element={<OrganizerPrivateRoute><OrganizerAddEvent /></OrganizerPrivateRoute>} />
+          <Route path='/organizer/event/:id' element={<OrganizerPrivateRoute><OrganizerEventById /></OrganizerPrivateRoute>} />
+          <Route path='/organizer/event/edit/:id' element={<OrganizerPrivateRoute><OrganizerEventEdit /></OrganizerPrivateRoute>} />
+
+          {/* User Routes */}
+          <Route path='/verify/:token' element={<UserVerify />} />
+          {/* User Private Routes */}
+          <Route path='/dashboard' element={<UserPrivateRoute><UserDashboard /></UserPrivateRoute> } />
+          <Route path='/event/:id' element={<UserPrivateRoute><UserEventById /></UserPrivateRoute>} />
+          <Route path='/bookings' element={<UserPrivateRoute><UserBookings /></UserPrivateRoute>} />
+
         </Routes>
-        <EmployeePrivateRoute>
-          <Route path='/dashboard' element={<EmployeeDashboard />} />
-          <Route path='/events' element={<EmployeeViewEvents />} />
-          <Route path='/event/:id' element={<EmployeeEventById />} />
-        </EmployeePrivateRoute>
       </BrowserRouter>
-
-      <BrowserRouter basename='/organizer'>
-        <OrganizerPrivateRoute>
-          <Route path='/dashboard' element={<OrganizerDashboard />} />
-          <Route path='/events' element={<OrganizerEvents />} />
-          <Route path='/event/add' element={<OrganizerAddEvent />} />
-          <Route path='/event/:id' element={<OrganizerEventById />} />
-          <Route path='/event/edit/:id' element={<OrganizerEventEdit />} />
-        </OrganizerPrivateRoute>
-      </BrowserRouter>
-
-      <BrowserRouter basename='/user'>
-        <UserPrivateRoute>
-          <Route path='/dashboard' element={<UserDashboard />} />
-          <Route path='/event/:id' element={<UserEventById />} />
-          <Route path='/bookings' element={<UserBookings />} />
-        </UserPrivateRoute>
-      </BrowserRouter>
-
-      
     </ThemeProvider>
   )
 }

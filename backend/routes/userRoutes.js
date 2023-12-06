@@ -8,6 +8,7 @@ const userAuth = require('../middlewares/user/userAuthMiddleware');
 
 router.post('/register', userController.userRegister);
 router.post('/login', userController.userLogin);
+router.get('/verify/:token', userController.userVerify)
 
 router.get('/dashboard', userAuth, userController.userDashboard);
 router.get('/all-events', userAuth, userController.viewAllEvents);

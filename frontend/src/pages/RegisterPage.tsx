@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tabs"
 import NavBar from '@/components/NavBar'
 import { useNavigate } from 'react-router-dom'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export function TabsDemo() {
   const navigate = useNavigate()
@@ -31,14 +32,17 @@ export function TabsDemo() {
     setActiveTab(tab)
   }
 
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [name, setName] = React.useState("")
-  const [phone, setPhone] = React.useState("")
-  const [company, setCompany] = React.useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirm_password, setConfirmPassword] = useState("")
+  const [name, setName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [company, setCompany] = useState("")
+  const [gender, setGender] = useState("")
 
   const userHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    console.log(name+ " "+ email+ " "+ phone+" "+gender+" "+password+" "+confirm_password)
     const data = await fetch('http://localhost:8080/user/register', {
       method: 'POST',
       headers: {
@@ -47,7 +51,10 @@ export function TabsDemo() {
         body: JSON.stringify({
           name,
           email,
-          password
+          phone,
+          password,
+          confirm_password,
+          gender
         })
       })
       const response = await data.json()
@@ -113,8 +120,30 @@ export function TabsDemo() {
               <Input id="email" placeholder='user@gmail.com' value={email} onChange={(e) => setEmail(e.target.value)} required/>
             </div>
             <div className="space-y-1">
+              <Label htmlFor="phone">Phone</Label>
+              <Input id="phone" placeholder='0123456789' value={phone} onChange={(e) => setPhone(e.target.value)} required/>
+            </div>
+            <div className='space-y-1'>
+              <Label htmlFor='gender'>Gender</Label>
+              <Select required onValueChange={(value) => setGender(value as string)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select Gender"  />
+              </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+
+            </div>
+            <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type='password' placeholder='**********' value={password} onChange={(e) => setPassword(e.target.value)} required/>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="password">Confirm Password</Label>
+              <Input id="confirm_password" type='password' placeholder='**********' value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)} required/>
             </div>
             <div className='flex items-center justify-between space-y-1'>
                 <a href="/user/login" className='hover:link text-blue-500'>

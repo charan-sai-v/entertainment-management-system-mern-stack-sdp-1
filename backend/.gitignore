@@ -24,6 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 
-.env
 # uploade files
 uploads
+
+# environment files
+.env.*

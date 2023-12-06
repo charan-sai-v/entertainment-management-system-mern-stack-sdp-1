@@ -2,30 +2,80 @@
 const User = require('../models/modules/userSchema')
 const Event = require('../models/eventSchema')
 const Booking = require('../models/bookingSchema')
-const Payment = require('../models/paymentSchema')
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+// generate random token
+const crypto = require('crypto');
+const sendMail = require('../utils/mail');
+const dotenv = require('dotenv');
 
+dotenv.config();
 
 // user register
 async function userRegister(req, res) {
     try {
+        // check if password and confirm password match
+        if (req.body.password !== req.body.confirm_password) {
+            return res.status(400).json({ message: 'Passwords do not match' });
+        }
+        // check if user email exists
+        const exitsUser = await User.findOne({ email: req.body.email });
+        if (exitsUser) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const token = crypto.randomBytes(32).toString('hex');
         const user = new User({
             name: req.body.name,
             email: req.body.email,
             phone: req.body.phone,
+            gender: req.body.gender,
             password: hashedPassword,
-            address: req.body.address
+            token: token,
+            token_expires: Date.now() + 3600000 // 1 hour
         });
         await user.save();
+        await sendMail({
+            to: user.email,
+            subject: 'Email Verification',
+            html: `<h1>Click <a href="${process.env.CLIENT_URL}/verify/${token}">here</a> to verify your email</h1>`
+        });
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });      
     }
 }
 
+// user verify
+async function userVerify(req, res) {
+    try {
+        const token = req.params.token;
+        if (!token) {
+            return res.status(400).json({ message: 'Token not found' });
+        }
+        const user = await User.findOne({ token: token });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid token' });
+        }
+        if (user.is_verified) {
+            return res.status(409).json({message: 'User Already verified'});
+        }
+        // check if user expired
+        if (user.token_expires < Date.now()) {
+            user.token = '';
+            user.token_expires = undefined;
+            await user.save();
+            return res.status(400).json({ message: 'Token expired' });
+        }
+        user.is_verified = true;
+        user.token = '';
+        await user.save();
+        res.status(200).json({ message: 'User verified' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 // user login
 async function userLogin(req, res) {
@@ -33,12 +83,16 @@ async function userLogin(req, res) {
         // check if user email exists
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            res.status(400).json({ message: 'User does not exist' });
+            return res.status(400).json({ message: 'User does not exist' });
         }
         // check if password is correct
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
-            res.status(400).json({ message: 'Password is incorrect' });
+            return res.status(400).json({ message: 'Password is incorrect' });
+        }
+        // check if user is verified
+        if (!user.is_verified) {
+            return res.status(400).json({ message: 'User is not verified' });
         }
         // create and assign a token
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: '24h' });
@@ -54,7 +108,7 @@ async function userDashboard(req, res) {
     try {
         const today = new Date();
         // view all events that should be displayed on the dashboard 
-        const events = await Event.find({ end_registration: { $gte: today }, is_approved: true, is_full: false }).sort({ start_date: 1 })
+        const events = await Event.find({ end_registration: { $gte: today }, status: "approved" }).sort({ start_date: 1 })
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -81,11 +135,11 @@ async function viewEventById(req, res) {
             return res.status(400).json({ message: 'Event does not exist' });
         }
 
-        if (!event.is_approved) {
+        if (event.status !== 'approved') {
             return res.status(400).json({ message: 'Event is not approved' });
         }
 
-        if (event.is_full) {
+        if (event.no_of_participants === event.capacity) {
             return res.status(400).json({ message: 'Event is full' });
         }
 
@@ -114,12 +168,12 @@ async function bookEvent(req, res) {
         // check if event capacity is full
         const event = await Event.findById(req.params.id);
         if (event.no_of_participants === event.capacity) {
-            res.status(400).json({ message: 'Event capacity is full' });
+            return res.status(400).json({ message: 'Event capacity is full' });
         }
         // check if user has already booked the event
         const booking = await Booking.findOne({ userId: req.id, eventId: req.params.id });
         if (booking) {
-            res.status(400).json({ message: 'You have already booked this event' });
+            return res.status(400).json({ message: 'You have already booked this event' });
         }
 
         // create a booking
@@ -128,7 +182,10 @@ async function bookEvent(req, res) {
             event_id: req.params.id,
             no_of_tickets: req.body.tickets,
             event_name: event.name,
-            user_name: req.body.user_name
+            user_name: 'charan sai',
+            payment_status: 'pending',
+            payment_id: '',
+            payment_amount: req.body.tickets * event.price
         });
         await newBooking.save();
         // update event no of participants and capacity
@@ -169,7 +226,7 @@ async function cancelBooking(req, res) {
         // check if booking exists
         const booking = await Booking.findById(req.params.id);
         if (!booking) {
-            res.status(400).json({ message: 'Booking does not exist' });
+            return res.status(400).json({ message: 'Booking does not exist' });
         }
         // check if event start date is 5 hours away
         const event = await Event.findById(booking.eventId);
@@ -178,7 +235,7 @@ async function cancelBooking(req, res) {
         const timeDifference = eventStartDate.getTime() - currentDate.getTime();
         const hoursDifference = timeDifference / (1000 * 3600);
         if (hoursDifference <= 5) {
-            res.status(400).json({ message: 'You cannot cancel this booking' });
+            return res.status(400).json({ message: 'You cannot cancel this booking' });
         }
         // update event capacity
         event.capacity = event.capacity + 1;
@@ -200,20 +257,13 @@ async function makePayment(req, res) {
             res.status(400).json({ message: 'Booking does not exist' });
         }
         // check if payment has already been made
-        const payment = await Payment.findOne({ bookingId: req.params.id });
-        if (payment) {
-            res.status(400).json({ message: 'Payment has already been made' });
-        }
+        
+        // if (payment) {
+        //     res.status(400).json({ message: 'Payment has already been made' });
+        // }
         // create a payment
-        const newPayment = new Payment({
-            userId: req.user._id,
-            bookingId: req.params.id,
-            paymentType: req.body.paymentType,
-            paymentStatus: req.body.paymentStatus,
-            paymentAmount: req.body.paymentAmount
-        });
-        await newPayment.save();
-        res.status(200).json(newPayment);
+       
+        res.status(200).json();
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -222,18 +272,14 @@ async function makePayment(req, res) {
 
 // view all payments
 async function viewAllPayments(req, res) {
-    try {
-        const payments = await Payment.find({ userId: req.user._id });
-        res.status(200).json(payments);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    
 }
 
 
 
 module.exports = {
     userRegister,
+    userVerify,
     userLogin,
     userDashboard,
     viewAllEvents,

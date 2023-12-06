@@ -1,48 +1,57 @@
-import React from 'react'
-import { Sidebar } from '@/components/side-bar'
-import { Button } from '@/components/ui/button'
 
-export default function UserSidebar() {
-  return (
-    <div>
-        <div className="drawer">
-            <input id="my-drawer-3" type="checkbox" className="drawer-toggle" /> 
-            <div className="drawer-content flex flex-col">
-                {/* Navbar */}
-                <div className="w-full navbar bg-base-300">
-                <div className="flex-none lg:hidden">
-                    <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    </label>
-                </div> 
-                <div className="flex-1 px-2 mx-2">Navbar Title</div>
-                    <div className="flex-none hidden lg:block">
-                        <ul className="menu menu-horizontal">
-                        {/* Navbar menu content here */}
-                            <li><a>Navbar Item 1</a></li>
-                            <li><a>Navbar Item 2</a></li>
-                        </ul>
+import {cn} from "@/lib/utils";
+import { LayoutDashboard, Library, User } from "lucide-react";
+import { Link } from "react-router-dom";
+
+
+const routes = [
+    {
+        label: "Dashboard",
+        icon: LayoutDashboard,
+        href: "/dashboard",
+        color: "text-sky-500"
+    },
+    {
+        label: "My Bookings",
+        icon: Library,
+        href: "/conversation",
+        color: "text-violet-500"
+    },
+    {
+        label: "Profile",
+        icon: User,
+        href: "/settings",
+    },
+
+]
+
+
+
+const UserSidebar = () => {
+    return (
+        <div className="space-y-4 py-4 flex flex-col h-full bg-[#F6F8FC] dark:bg-black text-black dark:text-white">
+            <div className="px-3 py-2 flex-1">
+                <Link to="/dashboard" className="flex items-center pl-3 mb-14">
+                    <div className="relative h-8 w-8 mr-4">
+                        {/* <Image fill alt="Logo" src="/logo.png" /> */}
                     </div>
+                    <h1 className={cn('text-2xl font-bold')}>
+                        EMS
+                    </h1>
+                </Link>
+                <div className='space-y-1'>
+                    {routes.map((route)=> (
+                        <Link className={cn("text-sm group flex p-3 w-full justify-start font-medium cursor-pointer  hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition")} to={route.href} key={route.href}>
+                            <div className="flex items-center flex-1">
+                                <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
+                                {route.label}
+                            </div>
+                        </Link>
+                    ))}
                 </div>
-                {/* Page content here */}
-                
-            </div> 
-            <div className="drawer-side">
-                <label htmlFor="my-drawer-3" className="drawer-overlay"></label> 
-                <ul className="menu p-4 w-80 min-h-full bg-base-200">
-                <Sidebar>
-                    <div className="px-3 py-2">
-                        <div className="space-y-1">
-                        <Button variant="secondary" className="w-full justify-start">
-                            Listen Now
-                        </Button>
-                        </div>
-                    </div>
-                </Sidebar>                
-                </ul>
-                
             </div>
         </div>
-    </div>
-  )
+    )
 }
+
+export default UserSidebar;

@@ -5,11 +5,13 @@ const cors = require('cors')
 
 const app = express()
 
+
 // app.use(bodyParser.json())
 app.use(express.json())
 // public folder
 app.use('/uploads', express.static('uploads'))
 app.use(cors())
+
 
 // routes
 const adminRoutes = require('./routes/adminRoutes')
