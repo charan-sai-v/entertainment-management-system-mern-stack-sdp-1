@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from '@/components/ui/checkbox'
 
 
 
@@ -20,13 +21,22 @@ export default function OrganizerAddEvent() {
     const [price, setPrice] = useState(0)
     const [capacity, setCapacity] = useState(0)
     const [category, setCategory] = useState("")
+    const [isCancelable, setIsCancelable] = useState(false)
+    const [cancel_deadline, setCancel_deadline] = useState("")
     const [startRegistrationDate, setStartRegistrationDate] = useState("")
     const [endRegistrationDate, setEndRegistrationDate] = useState("")
-    const [cancel_deadline, setCancel_deadline] = useState("")
 
     const navigate = useNavigate()
 
-    
+    const handleIsCancelable = () => {
+        setIsCancelable(!isCancelable);
+        if (isCancelable) {
+            document.getElementById('cancel_deadline_div')!.classList.add('hidden');
+        } else {
+            document.getElementById('cancel_deadline_div')!.classList.remove('hidden');
+        }
+    }
+
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -54,7 +64,11 @@ export default function OrganizerAddEvent() {
         formData.append("category", category);
         formData.append("startRegistrationDate", startRegistrationDate);
         formData.append("endRegistrationDate", endRegistrationDate);
-        formData.append("cancel_deadline", cancel_deadline);
+        formData.append("is_cancelable", isCancelable.toString());
+        if (isCancelable) {
+            formData.append("cancel_deadline", cancel_deadline);
+        }
+
     
         // Print the form data
         for (const pair of formData.entries()) {
@@ -123,7 +137,11 @@ export default function OrganizerAddEvent() {
                         <Label htmlFor='endDate'>Event End Date</Label>
                         <Input id="endDate" name='endDate' type='datetime-local' onChange={(e)=>setEndDate(e.target.value)} required min={startDate} />
                     </div>
-                    <div>
+                    <div className='flex items-center justify-start'>
+                        <Label htmlFor='is_cancelable' className='mr-2'>Is Cancelable?</Label>
+                        <Checkbox id="is_cancelable" name='is_cancelable' checked={isCancelable} onCheckedChange={handleIsCancelable} />
+                    </div>
+                    <div className='hidden' id='cancel_deadline_div'>
                         <Label htmlFor='cancel_deadline'>Cancellation Deadline - For users to cancel their bookings</Label>
                         <Input id="cancel_deadline" name='cancel_deadline' type='datetime-local' onChange={(e)=>setCancel_deadline(e.target.value)} required min={startRegistrationDate} max={startDate} />
                     </div>
@@ -139,7 +157,6 @@ export default function OrganizerAddEvent() {
                         <Label htmlFor='capacity'>Capacity</Label>
                         <Input id="capacity" name='capacity' type='number' onChange={(e)=>setCapacity(parseInt(e.target.value))} required />
                     </div>
-                    
                     <div>
                         <Label htmlFor='category'>Category</Label>
                         <Select onValueChange={(e)=>setCategory(e)} required>

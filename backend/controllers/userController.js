@@ -9,8 +9,10 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const sendMail = require('../utils/mail');
 const dotenv = require('dotenv');
-
 dotenv.config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2020-08-27'
+});
 
 // user register
 async function userRegister(req, res) {
@@ -115,6 +117,18 @@ async function userDashboard(req, res) {
     }
 }
 
+// user dashboard by category
+async function userDashboardByCategory(req, res) {
+    try {
+        const today = new Date();
+        // view all events that should be displayed on the dashboard
+        const events = await Event.find({ end_registration: { $gte: today }, status: "approved", category: req.params.category }).sort({ start_date: 1 })
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 
 // view all events
 async function viewAllEvents(req, res) {
@@ -149,12 +163,11 @@ async function viewEventById(req, res) {
             return res.status(400).json({ message: 'Event registration is closed' });
         }
 
-        const booking = await Booking.findOne({ event_id: req.params.id, user_id: req.id });
+        const booking = await Booking.findOne({ event: req.params.id, user: req.id });
 
         if (booking) {
             return res.status(400).json({ message: 'Already booked', event: event });
         }
-
         return res.status(200).json({ message: 'Event is available', event: event });
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -171,18 +184,20 @@ async function bookEvent(req, res) {
             return res.status(400).json({ message: 'Event capacity is full' });
         }
         // check if user has already booked the event
-        const booking = await Booking.findOne({ userId: req.id, eventId: req.params.id });
+        const booking = await Booking.findOne({ event_id: event._id, user_id: req.id }); 
         if (booking) {
             return res.status(400).json({ message: 'You have already booked this event' });
         }
 
+        const user = await User.findById(req.id);
+
         // create a booking
         const newBooking = new Booking({
+            user: user,
+            event: event,
             user_id: req.id,
             event_id: req.params.id,
             no_of_tickets: req.body.tickets,
-            event_name: event.name,
-            user_name: 'charan sai',
             payment_status: 'pending',
             payment_id: '',
             payment_amount: req.body.tickets * event.price
@@ -201,7 +216,7 @@ async function bookEvent(req, res) {
 // view all bookings
 async function viewAllBookings(req, res) {
     try {
-        const bookings = await Booking.find({ userId: req.user._id });
+        const bookings = await Booking.find({ user_id: req.id });
         res.status(200).json(bookings);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -252,27 +267,107 @@ async function cancelBooking(req, res) {
 // make payment
 async function makePayment(req, res) {
     try {
-        const booking = await Booking.findById(req.params.id);
-        if (!booking) {
-            res.status(400).json({ message: 'Booking does not exist' });
+        const existBooking = await Booking({ user_id: req.id, event_id: req.params.event_id });
+        if (existBooking.payment_status === 'paid') {
+            return res.status(400).json({ message: 'Payment already made' });
         }
-        // check if payment has already been made
+        const user = await User.findById(req.id);
+        if (!user) {
+            return res.status(400).json({ message: 'User does not exist' });
+        }
+        const event = await Event.findById(req.params.event_id);
+        if (!event) {
+            return res.status(400).json({ message: 'Event does not exist' });
+        }
+        const tickets = req.body.tickets;
+        const booking = await Booking({
+            user_id: req.id,
+            event_id: req.params.event_id,
+            user: user,
+            event: event,
+            no_of_tickets: tickets,
+            payment_status: 'pending',
+            payment_amount: req.body.tickets * event.price
+        });
+        await booking.save();
         
-        // if (payment) {
-        //     res.status(400).json({ message: 'Payment has already been made' });
-        // }
-        // create a payment
+        const stripeSession = await stripe.checkout.sessions.create({
+            success_url: `${process.env.CLIENT_URL}/payment/success/${booking._id}?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.CLIENT_URL}/payment/cancel/${booking._id}?session_id={CHECKOUT_SESSION_ID}`,
+            payment_method_types: ['card'],
+            mode: 'payment',
+            billing_address_collection: 'auto',
+            customer_email: user.email,
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'inr',
+                        product_data: {
+                            name: event.name,
+                            description: event.description,
+                            // images: [event.image]
+                        },
+                        unit_amount: tickets * event.price * 100,
+                    },
+                    quantity: 1,
+                }
+            ],
+            metadata: {
+                booking_id: booking._id.toString(),
+                user_id: user._id.toString(),
+                event_id: event._id.toString(),
+                no_of_tickets: tickets.toString()
+            }
+        });
+
+        console.log(stripeSession);
+        res.status(200).json({ url: stripeSession.url });
        
-        res.status(200).json();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// check payment status
+async function checkPaymentStatus(req, res) {
+    try {
+        const session_id = String(req.params.session_id);
+        const stripeSession = await stripe.checkout.sessions.retrieve(session_id);
+        console.log(stripeSession);
+        if (stripeSession.payment_status === 'paid') {
+            const booking = await Booking.findById(stripeSession.metadata.booking_id);
+            booking.payment_status = 'paid';
+            booking.payment_id = stripeSession.payment_intent;
+            await booking.save();
+            res.status(200).json({ message: 'Payment successful' });
+        } else {
+            booking.payment_status = 'failed';
+            await booking.save();
+            res.status(400).json({ message: 'Payment failed' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 
 
+
 // view all payments
 async function viewAllPayments(req, res) {
     
+}
+
+// view profile 
+async function viewProfile(req, res) {
+    try {
+        const user = await User.findById(req.id);
+        if (!user) {
+            return res.status(400).json({ message: 'User does not exist' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
 
@@ -282,6 +377,7 @@ module.exports = {
     userVerify,
     userLogin,
     userDashboard,
+    userDashboardByCategory,
     viewAllEvents,
     viewEventById,
     bookEvent,
@@ -289,7 +385,9 @@ module.exports = {
     viewBookingById,
     cancelBooking,
     makePayment,
-    viewAllPayments
+    checkPaymentStatus,
+    viewAllPayments,
+    viewProfile
 }
 
 

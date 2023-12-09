@@ -59,7 +59,8 @@ async function createEvent(req, res) {
         const endRegistrationDate = new Date(req.body.endRegistrationDate);
         const startDate = new Date(req.body.startDate);
         const endDate = new Date(req.body.endDate);
-        const cancelDeadline = new Date(req.body.cancel_deadline);
+        let is_cancelable = (req.body.is_cancelable === 'true') ? true : false;
+        const cancelDeadline = (is_cancelable) ? new Date(req.body.cancel_deadline) : null;
         const event = new Event({
             name: req.body.name,
             description: req.body.description,
@@ -68,6 +69,7 @@ async function createEvent(req, res) {
             end_date: endDate,
             start_registration: startRegistrationDate,
             end_registration: endRegistrationDate,
+            is_cancelable: is_cancelable,
             cancel_deadline: cancelDeadline,
             location: req.body.location,
             capacity: req.body.capacity,

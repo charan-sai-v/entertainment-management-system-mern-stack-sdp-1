@@ -24,21 +24,8 @@ import { Input } from '@/components/ui/input'
 import { Link } from 'react-router-dom'
 import { MoreVerticalIcon, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import Event  from '@/models/Event'
 
-type Event = {
-  _id: number
-  name: string
-  description: string
-  image: string
-  start_date: string
-  end_date: string
-  location: string
-  price: number
-  capacity: number
-  category: string
-  organizerId: number
-  organizerName: string
-}
 
 export default function OrganizerEvents() {
   const [loading, setLoading] = React.useState(true)

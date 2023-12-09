@@ -4,12 +4,14 @@ type Event = {
     description: string
     price: number
     image: string
-    category: string[]
+    category: string
     organizer: string
     start_date: string
     end_date: string
     start_registration: string
     end_registration: string
+    is_cancelable: boolean
+    cancel_deadline: string
     location: string
     status: string
     no_of_participants: number

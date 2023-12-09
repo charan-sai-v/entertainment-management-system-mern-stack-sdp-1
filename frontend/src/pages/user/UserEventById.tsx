@@ -19,7 +19,7 @@ export default function UserEventById() {
   const bookEvent = async () => {
     if (tickets === 0) return alert('Please select number of tickets')
     try {
-      const res = await fetch(`http://localhost:8080/user/book-event/${id}`, {
+      const res = await fetch(`http://localhost:8080/user/make-payment/${id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -30,8 +30,7 @@ export default function UserEventById() {
       const data = await res.json()
       console.log(data)
       if (res.status === 200) {
-        alert('Event Booked')
-        window.location.href = '/user/dashboard'
+        window.location.href = data.url;
       } else {
         alert('Something went wrong')
       }
@@ -101,7 +100,9 @@ export default function UserEventById() {
                 <CardDescription>{event?.description}</CardDescription>
               </CardHeader>
               <CardContent className='grid '>
-                  <img src={event?.image} alt="" className='rounded-md mb-10' />           
+                 <div className="flex items-center justify-center">
+					<img src={event?.image} alt="" className='rounded-md mb-10' />           
+                 </div>
                 
                 <div className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
                   <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />

@@ -14,13 +14,13 @@ const routes = [
     {
         label: "My Bookings",
         icon: Library,
-        href: "/conversation",
+        href: "/bookings",
         color: "text-violet-500"
     },
     {
         label: "Profile",
         icon: User,
-        href: "/settings",
+        href: "/profile",
     },
 
 ]

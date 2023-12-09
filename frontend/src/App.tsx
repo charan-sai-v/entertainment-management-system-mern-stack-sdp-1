@@ -32,6 +32,8 @@ import OrganizerEventEdit from './pages/organizer/OrganizerEventEdit'
 import UserDashboard from './pages/user/UserDashboard'
 import UserBookings from './pages/user/UserBookings'
 import UserVerify from './pages/user/UserVerify'
+import UserProfile from './pages/user/UserProfile'
+import UserPaymentCheck from './pages/user/UserPaymentCheck'
 
 
 export default function App() {
@@ -72,6 +74,8 @@ export default function App() {
           <Route path='/dashboard' element={<UserPrivateRoute><UserDashboard /></UserPrivateRoute> } />
           <Route path='/event/:id' element={<UserPrivateRoute><UserEventById /></UserPrivateRoute>} />
           <Route path='/bookings' element={<UserPrivateRoute><UserBookings /></UserPrivateRoute>} />
+          <Route path='/payment/success/:bookingId' element={<UserPrivateRoute><UserPaymentCheck /></UserPrivateRoute>} />
+          <Route path='/profile' element={<UserPrivateRoute><UserProfile /></UserPrivateRoute>} />
 
         </Routes>
       </BrowserRouter>

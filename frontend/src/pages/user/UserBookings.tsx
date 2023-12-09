@@ -1,42 +1,21 @@
 // write the code for UserBookings component here
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import NavBar from '@/components/NavBar';
-import P from '@/assets/p.jpg';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 
-type Event = {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string[];
-  organizer: string;
-  start_date: string;
-  end_date: string;
-  start_registration: string;
-  end_registration: string;
-  location: string;
-  no_of_participants: number;
-  created_at: string;
-  updated_at: string;
-};
-
+import Booking from '@/models/Booking';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { UserLayout } from '@/components/UserLayout';
 
 export default function UserDashboard() {
-  const [events, setEvents] = React.useState<Event[]>([]);
+  const [bookings, setBookings] = React.useState<Booking[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
-  const navigate = useNavigate();
 
   React.useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch('http://localhost:8080/user/dashboard', {
+        const res = await fetch('http://localhost:8080/user/all-bookings', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -48,7 +27,7 @@ export default function UserDashboard() {
         //   window.location.href = '/login'
         // }
         console.log(data);
-        setEvents(data);
+        setBookings(data);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -59,97 +38,80 @@ export default function UserDashboard() {
     fetchEvents();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await fetch(`http://localhost:8080/user/bookings/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await res.json();
-      if (res.status !== 200) {
-        throw new Error(data.message);
-      }
-      const newEvents = events.filter((event) => event._id !== id);
-      setEvents(newEvents);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleDelete = async (id: string) => {
+  //   try {
+  //     const res = await fetch(`http://localhost:8080/user/bookings/${id}`, {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+  //       }
+  //     });
+  //     const data = await res.json();
+  //     if (res.status !== 200) {
+  //       throw new Error(data.message);
+  //     }
+  //     const newEvents = events.filter((event) => event._id !== id);
+  //     setEvents(newEvents);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <div>
-      <NavBar />
-      <div className="flex flex-col items-center mt-8">
-        <h1 className="text-4xl font-bold">My Bookings</h1>
-        <div className="flex flex-col items-center mt-8">
-          {loading && (
-            <div className="flex flex-col items-center">
-              <p className="text-2xl font-bold">Loading...</p>
-            </div>
-          )}
-          {error && (
-            <div className="flex flex-col items-center">
-              <p className="text-2xl font-bold">Error</p>
-            </div>
-          )}
-          {!loading && !error && (
-            <div className="flex flex-col items-center">
-              {events.length === 0 && (
-                <div className="
-                flex flex-col items-center
-                bg-white shadow-md rounded-md
-                w-96 p-4
-                ">
-                  <p className="text-2xl font-bold">No Bookings</p>
-                  <img src={P} alt="No Bookings" className="w-96" />
+      <UserLayout>
+        <div className="px-10">
+          <h1 className="text-4xl font-bold">My Bookings</h1>
+          <div className="">
+            {loading && (
+              <div className="flex items-center justify-center ">
+                <div className='loading loading-spinner'>
+
                 </div>
-                )}
-                {events.map((event) => (
-                    <div className="flex flex-col items-center" key={event._id}>
-                        <div className="
-                        flex flex-col items-center
-                        bg-white shadow-md rounded-md
-                        w-96 p-4
-                        ">
-                        <p className="text-2xl font-bold">{event.name}</p>
-                        <p className="text-xl font-bold">{event.description}</p>
-                        <p className="text-xl font-bold">{event.price}</p>
-                        <p className="text-xl font-bold">{event.location}</p>
-                        <p className="text-xl font-bold">{event.start_date}</p>
-                        <p className="text-xl font-bold">{event.end_date}</p>
-                        <p className="text-xl font-bold">{event.start_registration}</p>
-                        <p className="text-xl font-bold">{event.end_registration}</p>
-                        <p className="text-xl font-bold">{event.no_of_participants}</p>
-                        <p className="text-xl font-bold">{event.category}</p>
-                        <p className="text-xl font-bold">{event.organizer}</p>
-                        <p className="text-xl font-bold">{event.created_at}</p>
-                        <p className="text-xl font-bold">{event.updated_at}</p>
-                        <div className="flex flex-row items-center">
-                            <Link to={`/event/${event._id}`}>
-                            <Button
-                                type="button"
-                                className="bg-green-500 hover:bg-green-600"
-                            >
-                                View
-                            </Button>
-                            </Link>
-                            <Button
-                            type="button"
-                            className="bg-red-500 hover:bg-red-600"
-                            onClick={() => handleDelete(event._id)}
-                            >
-                            Delete
-                            </Button>
-                        </div>
-                        </div>
-                    </div>
-                    ))}
-            </div>
+              </div>
             )}
+            {error && (
+              <div className="flex flex-col items-center">
+                <p className="text-2xl font-bold">Error</p>
+              </div>
+            )}
+            {!loading && !error && (
+              <Table>
+                <TableHeader >
+                  <TableRow>
+                    <TableHead>Event Name</TableHead>
+                    <TableHead>Event Image</TableHead>
+                    <TableHead>No of Tickets</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+              
+                {bookings.length === 0 && (
+                  <p className="text-2xl font-bold">No bookings found</p>
+                )}
+                {bookings.length > 0 && (
+                  <TableBody>
+                    {bookings.map((booking) => (
+                        <TableRow>
+                          <TableCell>{booking.event.name}</TableCell>
+                          <TableCell>
+                            <img src={booking.event.image} alt="" className="w-20 h-20 object-cover rounded" />
+                          </TableCell>
+                          <TableCell>{booking.no_of_tickets}</TableCell>
+                          <TableCell>{booking.payment_amount}</TableCell>
+                          <TableCell>{booking.payment_status}</TableCell>
+                        </TableRow>
+                    ))}
+                  </TableBody>
+                )}
+              </Table>
+
+            )}
+          </div>
         </div>
-        </div>
+      </UserLayout>
     </div>
-    );
+  );
 }
+
