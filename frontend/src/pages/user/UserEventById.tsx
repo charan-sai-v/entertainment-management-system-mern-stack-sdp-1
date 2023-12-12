@@ -91,9 +91,9 @@ export default function UserEventById() {
 
 
   return (
-    <div>
+    <div className="">
         <UserLayout>
-          <div className='mt-10 container'>
+          <div className='mt-10 container '>
             <Card className='flex flex-col justify-center w-full max-w-2xl mx-auto'>
               <CardHeader>
                 <CardTitle>{event?.name}</CardTitle>

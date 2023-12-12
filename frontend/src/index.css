@@ -1,6 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+html,
+body,
+:root {
+  /* height: 100%;
+  margin: 0;
+  padding: 0; */
+  font-family: 'Poppins', sans-serif;
+}
  
 @layer base {
   :root {
@@ -65,7 +75,7 @@
     --ring: 212.7 26.8% 83.9%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;

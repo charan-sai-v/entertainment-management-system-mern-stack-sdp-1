@@ -46,7 +46,7 @@ export function TabsDemo() {
       if (res.status === 200) {
         localStorage.setItem('token', data.token)
         localStorage.setItem('id', data.id)
-        navigate('/user/dashboard')
+        navigate('/dashboard')
       } else {
         alert("Invalid Credentials")
       }

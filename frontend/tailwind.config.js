@@ -83,5 +83,12 @@ module.exports = {
 
   daisyui: {
     theme: ["light", "dark"],
+    themes: [
+      {
+        dark: {
+          "background-color": "#02061700"
+        }
+      }
+    ]
   },
 }

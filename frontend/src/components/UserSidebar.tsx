@@ -1,7 +1,7 @@
 
 import {cn} from "@/lib/utils";
 import { LayoutDashboard, Library, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 
 const routes = [
@@ -41,12 +41,20 @@ const UserSidebar = () => {
                 </Link>
                 <div className='space-y-1'>
                     {routes.map((route)=> (
-                        <Link className={cn("text-sm group flex p-3 w-full justify-start font-medium cursor-pointer  hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition")} to={route.href} key={route.href}>
+                        <NavLink
+                            className={({ isActive }) =>
+                                [
+                                    "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer  hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition",
+                                    isActive ? "bg-black/10 dark:bg-white/10 hover:bg-black/20 dark:hover:bg-white/20" : "",
+                                ].join(" ")
+                            }
+                            to={route.href} 
+                            key={route.href}>
                             <div className="flex items-center flex-1">
                                 <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
                                 {route.label}
                             </div>
-                        </Link>
+                        </NavLink>
                     ))}
                 </div>
             </div>

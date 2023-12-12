@@ -1,5 +1,4 @@
 
-import NavBar from '@/components/NavBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,6 +7,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from '@/components/ui/checkbox'
+import { OrganizerLayout } from '@/components/organizer/OrganizerLayout'
 
 
 
@@ -86,7 +86,7 @@ export default function OrganizerAddEvent() {
             const data = await response.json();
             if (response.status===200) {
                 alert("Event added successfully");
-                navigate('/events');
+                navigate('/organizer/events');
             }
             if (data.message === 'Invalid Token') {
                 alert("Session expired. Please login again.");
@@ -103,88 +103,88 @@ export default function OrganizerAddEvent() {
     
     return (
         <div>
-            <NavBar />
-            <h2 className='text-center text-2xl font-bold  mt-20'>Add Event</h2>
-            <div className='flex item-center justify-center  '>
-                <form className='w-full max-w-sm space-y-4 mb-10' onSubmit={handleSubmit} >
-                    <div>
-                        <Label htmlFor='name'>Name</Label>
-                        <Input id="name" name='name' type='text' onChange={(e)=>setName(e.target.value)} required />                        
-                    </div>
-                    <div>
-                        <Label htmlFor='description'>Description</Label>
-                        <Textarea id="description" name='description' onChange={(e)=>setDescription(e.target.value)} required />
-                    </div>
-                    <div>
-                        <Label htmlFor='image'>Image</Label>
-                        <Input id="image" name='image' type='file' onChange={handleImage} required accept='image/*' />
-                    </div>
-                    <div>
-                        <Label htmlFor='startRegistrationDate'>Registration Start Date</Label>
-                        <Input id="startRegistrationDate" name='startRegistrationDate' type='datetime-local' 
-                         onChange={(e)=>setStartRegistrationDate(e.target.value)} required min={new Date().toISOString().slice(0,16)} />
-                    </div>
-                    <div>
-                        <Label htmlFor='endRegistrationDate'>Registration End Date</Label>
-                        <Input id="endRegistrationDate" name='endRegistrationDate' type='datetime-local' min={startRegistrationDate}
-                         onChange={(e)=>setEndRegistrationDate(e.target.value)} required />
-                    </div>
-                    <div>
-                        <Label htmlFor='startDate'>Event Start Date</Label>
-                        <Input id="startDate" name='startDate' type='datetime-local' onChange={(e)=>setStartDate(e.target.value)} required min={endRegistrationDate} />
-                    </div>
-                    <div>
-                        <Label htmlFor='endDate'>Event End Date</Label>
-                        <Input id="endDate" name='endDate' type='datetime-local' onChange={(e)=>setEndDate(e.target.value)} required min={startDate} />
-                    </div>
-                    <div className='flex items-center justify-start'>
-                        <Label htmlFor='is_cancelable' className='mr-2'>Is Cancelable?</Label>
-                        <Checkbox id="is_cancelable" name='is_cancelable' checked={isCancelable} onCheckedChange={handleIsCancelable} />
-                    </div>
-                    <div className='hidden' id='cancel_deadline_div'>
-                        <Label htmlFor='cancel_deadline'>Cancellation Deadline - For users to cancel their bookings</Label>
-                        <Input id="cancel_deadline" name='cancel_deadline' type='datetime-local' onChange={(e)=>setCancel_deadline(e.target.value)} required min={startRegistrationDate} max={startDate} />
-                    </div>
-                    <div>
-                        <Label htmlFor='location'>Location</Label>
-                        <Input id="location" name='location' type='text' onChange={(e)=>setLocation(e.target.value)} required />
-                    </div>
-                    <div>
-                        <Label htmlFor='price'>Price</Label>
-                        <Input id="price" name='price' type='number' onChange={(e)=>setPrice(parseInt(e.target.value))} required />
-                    </div>
-                    <div>
-                        <Label htmlFor='capacity'>Capacity</Label>
-                        <Input id="capacity" name='capacity' type='number' onChange={(e)=>setCapacity(parseInt(e.target.value))} required />
-                    </div>
-                    <div>
-                        <Label htmlFor='category'>Category</Label>
-                        <Select onValueChange={(e)=>setCategory(e)} required>
-                            <SelectTrigger  >
-                                <SelectValue placeholder="Select a category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="music">Music</SelectItem>
-                                    <SelectItem value="movies">Movies</SelectItem>
-                                    <SelectItem value="games">Games</SelectItem>
-                                    <SelectItem value="sports">Sports</SelectItem>
-                                    <SelectItem value="food">Food</SelectItem>
-                                    <SelectItem value="technology">Technology</SelectItem>
-                                    <SelectItem value="art">Art</SelectItem>
-                                    <SelectItem value="business">Business</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                            </Select>
-                    </div>
-                    <div>
-                        <Button type='submit'>Add Event</Button>
-                    </div>
+            <OrganizerLayout>
+                <h2 className='text-center text-2xl font-bold  mt-10'>Add Event</h2>
+                <div className='flex item-center justify-center'>
+                    <form className='w-full max-w-sm space-y-4 mb-10' onSubmit={handleSubmit} >
+                        <div>
+                            <Label htmlFor='name'>Name</Label>
+                            <Input id="name" name='name' type='text' onChange={(e)=>setName(e.target.value)} required />                        
+                        </div>
+                        <div>
+                            <Label htmlFor='description'>Description</Label>
+                            <Textarea id="description" name='description' onChange={(e)=>setDescription(e.target.value)} required />
+                        </div>
+                        <div>
+                            <Label htmlFor='image'>Image</Label>
+                            <Input id="image" name='image' type='file' onChange={handleImage} required accept='image/*' />
+                        </div>
+                        <div>
+                            <Label htmlFor='startRegistrationDate'>Registration Start Date</Label>
+                            <Input id="startRegistrationDate" name='startRegistrationDate' type='datetime-local' 
+                            onChange={(e)=>setStartRegistrationDate(e.target.value)} required min={new Date().toISOString().slice(0,16)} />
+                        </div>
+                        <div>
+                            <Label htmlFor='endRegistrationDate'>Registration End Date</Label>
+                            <Input id="endRegistrationDate" name='endRegistrationDate' type='datetime-local' min={startRegistrationDate}
+                            onChange={(e)=>setEndRegistrationDate(e.target.value)} required />
+                        </div>
+                        <div>
+                            <Label htmlFor='startDate'>Event Start Date</Label>
+                            <Input id="startDate" name='startDate' type='datetime-local' onChange={(e)=>setStartDate(e.target.value)} required min={endRegistrationDate} />
+                        </div>
+                        <div>
+                            <Label htmlFor='endDate'>Event End Date</Label>
+                            <Input id="endDate" name='endDate' type='datetime-local' onChange={(e)=>setEndDate(e.target.value)} required min={startDate} />
+                        </div>
+                        <div className='flex items-center justify-start'>
+                            <Label htmlFor='is_cancelable' className='mr-2'>Is Cancelable?</Label>
+                            <Checkbox id="is_cancelable" name='is_cancelable' checked={isCancelable} onCheckedChange={handleIsCancelable} />
+                        </div>
+                        <div className='hidden' id='cancel_deadline_div'>
+                            <Label htmlFor='cancel_deadline'>Cancellation Deadline - For users to cancel their bookings</Label>
+                            <Input id="cancel_deadline" name='cancel_deadline' type='datetime-local' onChange={(e)=>setCancel_deadline(e.target.value)} min={startRegistrationDate} max={startDate} />
+                        </div>
+                        <div>
+                            <Label htmlFor='location'>Location</Label>
+                            <Input id="location" name='location' type='text' onChange={(e)=>setLocation(e.target.value)} required />
+                        </div>
+                        <div>
+                            <Label htmlFor='price'>Price</Label>
+                            <Input id="price" name='price' type='number' onChange={(e)=>setPrice(parseInt(e.target.value))} required />
+                        </div>
+                        <div>
+                            <Label htmlFor='capacity'>Capacity</Label>
+                            <Input id="capacity" name='capacity' type='number' onChange={(e)=>setCapacity(parseInt(e.target.value))} required />
+                        </div>
+                        <div>
+                            <Label htmlFor='category'>Category</Label>
+                            <Select onValueChange={(e)=>setCategory(e)} required>
+                                <SelectTrigger  >
+                                    <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="music">Music</SelectItem>
+                                        <SelectItem value="movies">Movies</SelectItem>
+                                        <SelectItem value="games">Games</SelectItem>
+                                        <SelectItem value="sports">Sports</SelectItem>
+                                        <SelectItem value="food">Food</SelectItem>
+                                        <SelectItem value="technology">Technology</SelectItem>
+                                        <SelectItem value="art">Art</SelectItem>
+                                        <SelectItem value="business">Business</SelectItem>
+                                        <SelectItem value="other">Other</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                                </Select>
+                        </div>
+                        <div>
+                            <Button type='submit'>Add Event</Button>
+                        </div>
 
-                </form>
-            </div>
-
+                    </form>
+                </div>
+            </OrganizerLayout>
         </div>
     )
 }

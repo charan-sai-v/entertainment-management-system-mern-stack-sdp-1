@@ -42,6 +42,10 @@ export function ThemeProvider({
         : "light"
 
       root.classList.add(systemTheme)
+      if (!localStorage.getItem("chakra-ui-color-mode")) {
+        localStorage.setItem("chakra-ui-color-mode", theme) 
+      }
+      root.setAttribute("data-theme", systemTheme)
       return
     }
 
@@ -52,6 +56,7 @@ export function ThemeProvider({
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme)
+      localStorage.setItem("chakra-ui-color-mode", theme) 
       document.querySelector("html")?.setAttribute("data-theme", theme);
       setTheme(theme)
     },

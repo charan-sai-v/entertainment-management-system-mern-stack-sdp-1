@@ -37,7 +37,6 @@ const Event = new mongoose.Schema({
             },
             message: 'Cancel deadline must be greater than start registration'
         },
-        default: null,
     },
     organizerId: { required: true, type: mongoose.Schema.Types.ObjectId, },
     organizerCompany: { type: String, },

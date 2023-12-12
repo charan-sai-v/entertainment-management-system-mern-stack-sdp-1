@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import OrganizerNav from '@/components/OrganizerNav'
 import { 
   Table,
   TableCaption,
@@ -25,6 +24,7 @@ import { Link } from 'react-router-dom'
 import { MoreVerticalIcon, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Event  from '@/models/Event'
+import { OrganizerLayout } from '@/components/organizer/OrganizerLayout'
 
 
 export default function OrganizerEvents() {
@@ -116,82 +116,82 @@ export default function OrganizerEvents() {
   }
   return (
     <div>
-      <OrganizerNav>
-      <div className=' px-4'>
-        <div className='mt-10 space-y-5'>
-          <h1 className='text-2xl font-bold'>Events</h1>
-          <div className='flex justify-between items-center'>
-            <Link to={'/event/add'}><Button size={'lg'}>Add Event</Button></Link>
-            <div className='relative'>
-              <Input
-                value={searchValue}
-                onChange={handleSearch}
-                type='text'
-                placeholder='Search'
-                className='pl-10'
-              />
-              <Search className='absolute top-2 left-2' />
+      <OrganizerLayout>
+        <div className=' px-4 '>
+          <div className='mt-10 space-y-5 '>
+            <h1 className='text-2xl font-bold'>Events</h1>
+            <div className='flex justify-between items-center'>
+              <Link to={'/organizer/event/add'}><Button size={'lg'}>Add Event</Button></Link>
+              <div className='relative'>
+                <Input
+                  value={searchValue}
+                  onChange={handleSearch}
+                  type='text'
+                  placeholder='Search'
+                  className='pl-10'
+                />
+                <Search className='absolute top-2 left-2' />
+              </div>
             </div>
-          </div>
-        <Table>
-          <TableCaption>Events</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Event Name</TableHead>
-              <TableHead>Event Start Date</TableHead>
-              <TableHead>Event End Date</TableHead>
-              <TableHead>Event Category</TableHead>
-              <TableHead>Event Price</TableHead>
-              <TableHead>Event Capacity</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredEvents.length ? (
-              filteredEvents.map((event) => (
-                <TableRow key={event._id}>
-                  <TableCell>{event.name}</TableCell>
-                  <TableCell>{formatDate(event.start_date)}</TableCell>
-                  <TableCell>{formatDate(event.end_date)}</TableCell>
-                  <TableCell>{event.category}</TableCell>
-                  <TableCell>{event.price}</TableCell>
-                  <TableCell>{event.capacity}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <MoreVerticalIcon />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center" className="w-40">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <Link to={`/event/${event._id}`} >
-                          <DropdownMenuItem>View</DropdownMenuItem>
-                        </Link>
-                        <Link to={`/event/edit/${event._id}`}>
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className='text-red-500 focus:bg-red-500 hover:bg-red-500 focus:text-white hover:text-white'
-                        onClick={() => handleDelete(event._id)}>
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+          <Table className=''>
+            <TableCaption>Events</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Event Name</TableHead>
+                <TableHead>Event Start Date</TableHead>
+                <TableHead>Event End Date</TableHead>
+                <TableHead>Event Category</TableHead>
+                <TableHead>Event Price</TableHead>
+                <TableHead>Event Capacity</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredEvents.length ? (
+                filteredEvents.map((event) => (
+                  <TableRow key={event._id}>
+                    <TableCell>{event.name}</TableCell>
+                    <TableCell>{formatDate(event.start_date)}</TableCell>
+                    <TableCell>{formatDate(event.end_date)}</TableCell>
+                    <TableCell>{event.category}</TableCell>
+                    <TableCell>{event.price}</TableCell>
+                    <TableCell>{event.capacity}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <MoreVerticalIcon />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="center" className="w-40">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <Link to={`/organizer/event/${event._id}`} >
+                            <DropdownMenuItem>View</DropdownMenuItem>
+                          </Link>
+                          <Link to={`/event/edit/${event._id}`}>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                          </Link>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem className='text-red-500 focus:bg-red-500 hover:bg-red-500 focus:text-white hover:text-white'
+                          onClick={() => handleDelete(event._id)}>
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center">
+                    No Events Found.
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
-                  No Events Found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        </div>
-     
-    </div>
-      </OrganizerNav>
+              )}
+            </TableBody>
+          </Table>
+          </div>
+      
+      </div>
+      </OrganizerLayout>
       <Toaster />
     </div>
    

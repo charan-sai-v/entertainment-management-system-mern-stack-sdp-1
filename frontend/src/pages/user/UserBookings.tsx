@@ -61,7 +61,7 @@ export default function UserDashboard() {
     <div>
       <UserLayout>
         <div className="px-10">
-          <h1 className="text-4xl font-bold">My Bookings</h1>
+          <h1 className="text-2xl font-bold">My Bookings</h1>
           <div className="">
             {loading && (
               <div className="flex items-center justify-center ">
@@ -85,29 +85,29 @@ export default function UserDashboard() {
                     <TableHead>Price</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
-                </TableHeader>
-              
-                {bookings.length === 0 && (
-                  <p className="text-2xl font-bold">No bookings found</p>
-                )}
-                {bookings.length > 0 && (
-                  <TableBody>
-                    {bookings.map((booking) => (
+                </TableHeader>               
+                <TableBody>
+                    {bookings.length > 0 && (
+                    bookings.map((booking) => (
                         <TableRow>
-                          <TableCell>{booking.event.name}</TableCell>
-                          <TableCell>
+                            <TableCell>{booking.event.name}</TableCell>
+                            <TableCell>
                             <img src={booking.event.image} alt="" className="w-20 h-20 object-cover rounded" />
-                          </TableCell>
-                          <TableCell>{booking.no_of_tickets}</TableCell>
-                          <TableCell>{booking.payment_amount}</TableCell>
-                          <TableCell>{booking.payment_status}</TableCell>
+                            </TableCell>
+                            <TableCell>{booking.no_of_tickets}</TableCell>
+                            <TableCell>{booking.payment_amount}</TableCell>
+                            <TableCell>{booking.payment_status}</TableCell>
                         </TableRow>
-                    ))}
-                  </TableBody>
+                    ))
                 )}
+                </TableBody>
               </Table>
-
             )}
+            <div className='mt-5'>
+                {bookings.length === 0 && (
+                <p className=" text-center ">No bookings found</p>
+                )}
+            </div>
           </div>
         </div>
       </UserLayout>
