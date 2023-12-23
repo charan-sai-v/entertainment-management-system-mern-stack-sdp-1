@@ -40,7 +40,7 @@ app.get('/', (req, res)=>{
 
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1/ems', {
+mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
