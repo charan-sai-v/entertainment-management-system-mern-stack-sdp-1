@@ -21,6 +21,8 @@ import NavBar from '@/components/NavBar'
 import { useNavigate } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
+import { absoluteUrl } from '@/lib/utils'
+
 export function TabsDemo() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = React.useState("user")
@@ -43,7 +45,7 @@ export function TabsDemo() {
   const userHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(name+ " "+ email+ " "+ phone+" "+gender+" "+password+" "+confirm_password)
-    const data = await fetch('http://localhost:8080/user/register', {
+    const data = await fetch(`${absoluteUrl('/user/register')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -68,7 +70,7 @@ export function TabsDemo() {
 
   const organizerHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const data = await fetch('http://localhost:8080/organizer/register', {
+    const data = await fetch(`${absoluteUrl('/organizer/register')}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import serverUrl from '@/lib/serverUrl'
 import { UserLayout } from '@/components/UserLayout';
+import { absoluteUrl } from '@/lib/utils';
 
 
 export default function UserPaymentCheck() {
-  const server_url = serverUrl();
   // const { bookingId } = useParams<{ bookingId: string }>()
   const [searchParams] = useSearchParams()
   const [loading, setLoading] = React.useState(true)
@@ -13,8 +12,8 @@ export default function UserPaymentCheck() {
   const session_id = searchParams.get('session_id')
   useEffect(() => {
     const fetchPayment = async () => {
-      try {
-        const res = await fetch(`${server_url}/user/check-payment/${session_id}`, {
+      try { 
+        const res = await fetch(`${absoluteUrl('/user/check-payment')}`, { 
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -34,7 +33,7 @@ export default function UserPaymentCheck() {
       }
     }
     fetchPayment()
-  }, [session_id, server_url])
+  }, [session_id])
 
   return (
     <UserLayout>

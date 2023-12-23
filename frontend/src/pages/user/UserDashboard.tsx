@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react'
 
-import serverUrl from '@/lib/serverUrl'
 import { UserLayout } from '@/components/UserLayout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -11,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 
 
-
+import { absoluteUrl } from '@/lib/utils'
 
 
 export default function UserDashboard() {
@@ -19,15 +18,14 @@ export default function UserDashboard() {
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState(false)
   const [category, setCategory] = React.useState('all')
-  const server_url = serverUrl()
 
   const fetchEventsByCategory = async (category: string) => {
     if (category === 'all') {
       fetchEvents()
       return;
     }
-	try {
-		const res = await fetch(`${server_url}/user/dashboard/${category}`, {
+	try { 
+		const res = await fetch(`${absoluteUrl('/user/dashboard')}/${category}`, {
 		headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
 		}
@@ -44,7 +42,7 @@ export default function UserDashboard() {
 
     const fetchEvents = async () => {
         try {
-        const res = await fetch(`${server_url}/user/dashboard`, {
+        const res = await fetch(`${absoluteUrl('/user/dashboard')}`, {
             headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
             }

@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import Event from "@/models/Event";
 import { UserLayout } from "@/components/UserLayout";
+import { absoluteUrl } from "@/lib/utils";
 
 export default function UserEventById() {
   const { id } = useParams<{ id: string }>()
@@ -19,8 +20,8 @@ export default function UserEventById() {
 
   const bookEvent = async () => {
     if (tickets === 0) return alert('Please select number of tickets')
-    try {
-      const res = await fetch(`http://localhost:8080/user/make-payment/${id}`, {
+    try { 
+      const res = await fetch(`${absoluteUrl('/user/make-payment')}` , {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -45,7 +46,7 @@ export default function UserEventById() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/user/event/${id}`, {
+        const res = await fetch(`${absoluteUrl('/user/events')}/${id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

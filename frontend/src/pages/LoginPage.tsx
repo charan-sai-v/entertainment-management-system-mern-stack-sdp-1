@@ -18,6 +18,9 @@ import {
 } from "@/components/ui/tabs"
 import NavBar from '@/components/NavBar'
 import { useNavigate } from 'react-router-dom'
+import { absoluteUrl } from '@/lib/utils'
+
+
 
 export function TabsDemo() {
   const [active, setActive] = React.useState("user")
@@ -34,7 +37,7 @@ export function TabsDemo() {
   const userHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const res = await fetch('http://localhost:8080/user/login', {
+      const res = await fetch(`${absoluteUrl('/user/login')}`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -58,7 +61,7 @@ export function TabsDemo() {
   const organizerHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const res = await fetch('http://localhost:8080/organizer/login', {
+      const res = await fetch(`${absoluteUrl('/organizer/login')}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

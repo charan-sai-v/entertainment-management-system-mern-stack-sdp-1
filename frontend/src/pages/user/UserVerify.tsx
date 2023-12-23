@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import serverUrl from '@/lib/serverUrl';
+import { absoluteUrl } from '@/lib/utils';
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -9,11 +9,9 @@ export default function UserVerify() {
     const [loading, setLoading] = React.useState(true)
     const [message, setMessage] = React.useState('')
     const [isSuccess, setIsSuccess] = React.useState(false)
-    const server_url = serverUrl() 
     useEffect(() => {
-        console.log(serverUrl())
         const checkToken = async () => {
-            const res = await fetch(`${server_url}/user/verify/${token}`)
+            const res = await fetch(`${absoluteUrl('/user/verify')}/${token}`) 
             const data = await res.json()
             console.log(data)
             if (res.status === 200) {

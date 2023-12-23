@@ -7,6 +7,7 @@ import Booking from '@/models/Booking';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { UserLayout } from '@/components/UserLayout';
 import { Badge } from '@/components/ui/badge';
+import { absoluteUrl } from '@/lib/utils';
 
 export default function UserDashboard() {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
@@ -16,7 +17,7 @@ export default function UserDashboard() {
   React.useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch('http://localhost:8080/user/all-bookings', {
+        const res = await fetch(`${absoluteUrl('/user/bookings')}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

@@ -1,6 +1,7 @@
 
 import { UserLayout } from '@/components/UserLayout'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { absoluteUrl } from '@/lib/utils'
 import User from '@/models/User'
 import React, { useEffect } from 'react'
 
@@ -12,7 +13,7 @@ export default function UserProfile() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await fetch('http://localhost:8080/user/profile', {
+                const res = await fetch(`${absoluteUrl('/user/profile')}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
