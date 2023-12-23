@@ -13,6 +13,7 @@ export default function UserEventById() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [isAlreadyBooked, setIsAlreadyBooked] = useState(false)
+  const [isClosed, setIsClosed] = useState(false)
 
   const [tickets, setTickets] = useState(1)
 
@@ -52,6 +53,8 @@ export default function UserEventById() {
         const data = await res.json()
         if (data.message === 'Already booked') {
           setIsAlreadyBooked(true)
+        }else if (data.message === 'Event registration is closed') {
+          setIsClosed(true)
         }
         console.log(data)
         setEvent(data.event)
@@ -250,6 +253,24 @@ export default function UserEventById() {
                     </div>
                   ) : null
                 }
+                {
+                  isClosed ? (
+                    <div className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0">
+                      <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          <MapPin className='inline-block w-4 h-4 mr-1 -mt-0.5' />
+                          Status
+                        </p>
+                        <p className="text-sm text-red-500">
+                          Event registration is closed
+                        </p>
+                      </div>
+                    </div>
+                  ) : null
+                }
+                {
+                  !isClosed && !isAlreadyBooked && event?.no_of_participants !== event?.capacity ? (
                 <div className="space-y-1">
                   <Label htmlFor="tickets" className="mr-5">Tickets (Max 5)</Label>
                   <Button size={'icon'} variant='destructive' onClick={() => setTickets(tickets - 1)} disabled={tickets === 1}>
@@ -260,13 +281,18 @@ export default function UserEventById() {
                     <Plus className=' w-4 h-4 mr-1' />
                   </Button>
                 </div>
+                  ) : null
+                }
               </CardContent>
               <CardFooter className='justify-between'>
                 { event?.no_of_participants === event?.capacity ? (
                   <Button disabled>Event Full</Button>
                 ) : isAlreadyBooked ? (
                   <Button disabled variant={"secondary"}>Already Booked</Button>
-                ) : (
+                ) : isClosed ? (
+                  <Button disabled variant={"secondary"}>Event registration is closed</Button>
+                ) 
+                : (
                   <Button onClick={bookEvent}>Book Event</Button>
                 )}
               </CardFooter>

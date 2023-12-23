@@ -6,6 +6,7 @@ import React from 'react';
 import Booking from '@/models/Booking';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { UserLayout } from '@/components/UserLayout';
+import { Badge } from '@/components/ui/badge';
 
 export default function UserDashboard() {
   const [bookings, setBookings] = React.useState<Booking[]>([]);
@@ -96,7 +97,15 @@ export default function UserDashboard() {
                             </TableCell>
                             <TableCell>{booking.no_of_tickets}</TableCell>
                             <TableCell>{booking.payment_amount}</TableCell>
-                            <TableCell>{booking.payment_status}</TableCell>
+                            <TableCell>{
+                            (booking.payment_status === "paid") ? (
+                              <Badge  variant={'success'} >Paid</Badge>
+                            ) : (booking.payment_status === "pending") ? (
+                              <Badge variant={'warning'} >Pending</Badge>
+                            ) : (
+                              <Badge variant={'destructive'} >Not Paid</Badge>
+                            )
+                            }</TableCell>
                         </TableRow>
                     ))
                 )}
@@ -105,7 +114,7 @@ export default function UserDashboard() {
             )}
             <div className='mt-5'>
                 {bookings.length === 0 && (
-                <p className=" text-center ">No bookings found</p>
+                  <p className=" text-center ">No bookings found</p>
                 )}
             </div>
           </div>

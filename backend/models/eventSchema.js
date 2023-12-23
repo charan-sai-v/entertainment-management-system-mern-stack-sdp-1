@@ -41,7 +41,7 @@ const Event = new mongoose.Schema({
     organizerId: { required: true, type: mongoose.Schema.Types.ObjectId, },
     organizerCompany: { type: String, },
     organizerName: { type: String, required: true },
-    status: { type: String, default: 'pending' }, // pending, approved, rejected, deleted
+    status: { type: String, default: 'pending' }, // pending, approved, rejected, cancelled
 })
 
 

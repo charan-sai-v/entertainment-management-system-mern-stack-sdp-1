@@ -164,6 +164,102 @@ async function deleteEvent(req, res) {
 }
 
 
+// organizer settings
+async function organizerSettings(req, res) {
+    try {
+        const organizer = await Organizer.findOne({ _id: req.id });
+        if (!organizer) {
+            return res.status(404).json({ message: 'Organizer not found' });
+        }
+        organizer.name = req.body.name || organizer.name;
+        organizer.email = req.body.email || organizer.email;
+        organizer.phone = req.body.phone || organizer.phone;
+        organizer.company = req.body.company || organizer.company;
+        organizer.is_bank_account = req.body.is_bank_account || organizer.is_bank_account;
+        organizer.bank_account_name = req.body.bank_account_name || organizer.bank_account_name;
+        organizer.bank_account_number = req.body.bank_account_number || organizer.bank_account_number;
+        organizer.bank_ifsc_code = req.body.bank_ifsc_code || organizer.bank_ifsc_code;
+        organizer.bank_name = req.body.bank_name || organizer.bank_name;
+        organizer.updated_at = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+        await organizer.save();
+        res.status(200).json(organizer);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// check organizer is filled bank account
+async function checkOrganizerIsFilledBankAccount(req, res) {
+    try {
+        const organizer = await Organizer.findOne({ _id: req.id });
+        if (!organizer) {
+            return res.status(404).json({ message: 'Organizer not found' });
+        }
+        res.status(200).json(organizer.is_bank_account);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// organizer update bank account
+async function organizerUpdateBankAccount(req, res) {
+    try {
+        const organizer = await Organizer.findOne({ _id: req.id });
+        if (!organizer) {
+            return res.status(404).json({ message: 'Organizer not found' });
+        }
+        organizer.is_bank_account = req.body.is_bank_account || organizer.is_bank_account;
+        organizer.bank_account_name = req.body.bank_account_name || organizer.bank_account_name;
+        organizer.bank_account_number = req.body.bank_account_number || organizer.bank_account_number;
+        organizer.bank_ifsc_code = req.body.bank_ifsc_code || organizer.bank_ifsc_code;
+        organizer.bank_name = req.body.bank_name || organizer.bank_name;
+        organizer.updated_at = moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
+        await organizer.save();
+        res.status(200).json(organizer);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// organizer dashboard
+async function organizerDashboard(req, res) {
+    try {
+        // no of total events
+        const events = await Event.find({ organizerId: req.id });
+        const totalEvents = events.length;
+        // no of total user registrations
+        let totalRegistrations = 0;
+        events.forEach(event => {
+            totalRegistrations += event.no_of_participants;
+        });
+        // no of total revenue
+        let totalRevenue = 0;
+        events.forEach(event => {
+            totalRevenue += event.no_of_participants * event.price;
+        });
+        // Current month revenue
+        let currentMonthRevenue = 0;
+        events.forEach(event => {
+            if (moment().tz('Asia/Kolkata').format('YYYY-MM') === moment(event.created_at).tz('Asia/Kolkata').format('YYYY-MM')) {
+                currentMonthRevenue += event.no_of_participants * event.price;
+            }
+        });
+
+        // upcoming 5 events
+        const upcomingEvents = await Event.find({ organizerId: req.id, start_date: { $gte: new Date() } }).limit(5);
+        
+        // past 5 events
+        const pastEvents = await Event.find({ organizerId: req.id, start_date: { $lt: new Date() } }).limit(5);
+
+        // cancelled 5 events
+        const cancelledEvents = await Event.find({ organizerId: req.id, status: 'cancelled' }).limit(5);
+
+        return res.status(200).json({ totalEvents: totalEvents, totalRegistrations: totalRegistrations, totalRevenue: totalRevenue, currentMonthRevenue: currentMonthRevenue, upcomingEvents: upcomingEvents, pastEvents: pastEvents, cancelledEvents: cancelledEvents });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 
 module.exports = {
     organizerLogin,
@@ -172,5 +268,9 @@ module.exports = {
     getEvents,
     getEventById,
     updateEvent,
-    deleteEvent
+    deleteEvent,
+    organizerSettings,
+    checkOrganizerIsFilledBankAccount,
+    organizerUpdateBankAccount,
+    organizerDashboard
 }

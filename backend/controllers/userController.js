@@ -160,7 +160,7 @@ async function viewEventById(req, res) {
         const today = new Date();
 
         if (event.end_registration < today) {
-            return res.status(400).json({ message: 'Event registration is closed' });
+            return res.status(200).json({ message: 'Event registration is closed', event: event });
         }
 
         const booking = await Booking.findOne({ event: req.params.id, user: req.id });
@@ -339,6 +339,9 @@ async function checkPaymentStatus(req, res) {
             booking.payment_status = 'paid';
             booking.payment_id = stripeSession.payment_intent;
             await booking.save();
+            const event = await Event.findById(booking.event_id);
+            event.no_of_participants = event.no_of_participants + booking.no_of_tickets;
+            await event.save();
             res.status(200).json({ message: 'Payment successful' });
         } else {
             booking.payment_status = 'failed';

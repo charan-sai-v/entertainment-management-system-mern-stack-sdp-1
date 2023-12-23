@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from '@/components/ui/checkbox'
 import { OrganizerLayout } from '@/components/organizer/OrganizerLayout'
+import { ArrowLeft } from 'lucide-react'
 
 
 
@@ -104,6 +105,9 @@ export default function OrganizerAddEvent() {
     return (
         <div>
             <OrganizerLayout>
+                <div className='flex items-center justify-start ml-3'>
+                    <Button onClick={()=>navigate('/organizer/events')} variant={'ghost'} className='w-fit'><ArrowLeft size={16} className='mr-1' /> Back</Button>
+                </div>
                 <h2 className='text-center text-2xl font-bold  mt-10'>Add Event</h2>
                 <div className='flex item-center justify-center'>
                     <form className='w-full max-w-sm space-y-4 mb-10' onSubmit={handleSubmit} >

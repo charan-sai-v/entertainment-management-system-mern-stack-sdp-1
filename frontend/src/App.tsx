@@ -34,6 +34,7 @@ import UserBookings from './pages/user/UserBookings'
 import UserVerify from './pages/user/UserVerify'
 import UserProfile from './pages/user/UserProfile'
 import UserPaymentCheck from './pages/user/UserPaymentCheck'
+import OrganizerSetting from './pages/organizer/OrganizerSetting'
 
 
 export default function App() {
@@ -67,6 +68,7 @@ export default function App() {
           <Route path='/organizer/event/add' element={<OrganizerPrivateRoute><OrganizerAddEvent /></OrganizerPrivateRoute>} />
           <Route path='/organizer/event/:id' element={<OrganizerPrivateRoute><OrganizerEventById /></OrganizerPrivateRoute>} />
           <Route path='/organizer/event/edit/:id' element={<OrganizerPrivateRoute><OrganizerEventEdit /></OrganizerPrivateRoute>} />
+          <Route path='/organizer/settings' element={<OrganizerPrivateRoute><OrganizerSetting /></OrganizerPrivateRoute>} />
 
           {/* User Routes */}
           <Route path='/verify/:token' element={<UserVerify />} />
@@ -75,6 +77,7 @@ export default function App() {
           <Route path='/event/:id' element={<UserPrivateRoute><UserEventById /></UserPrivateRoute>} />
           <Route path='/bookings' element={<UserPrivateRoute><UserBookings /></UserPrivateRoute>} />
           <Route path='/payment/success/:bookingId' element={<UserPrivateRoute><UserPaymentCheck /></UserPrivateRoute>} />
+          <Route path='/payment/cancel/:bookingId' element={<UserPrivateRoute><UserPaymentCheck /></UserPrivateRoute>} />
           <Route path='/profile' element={<UserPrivateRoute><UserProfile /></UserPrivateRoute>} />
 
         </Routes>

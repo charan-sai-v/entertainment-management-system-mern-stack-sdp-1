@@ -25,6 +25,7 @@ import { MoreVerticalIcon, Search } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Event  from '@/models/Event'
 import { OrganizerLayout } from '@/components/organizer/OrganizerLayout'
+import { Badge } from '@/components/ui/badge'
 
 
 export default function OrganizerEvents() {
@@ -63,13 +64,13 @@ export default function OrganizerEvents() {
   }, [navigate])
 
   // formatted date - 05-OCT-2023
-  const formatDate = (date: string) => {
-    const dataObject = new Date(date)
-    const year = dataObject.getFullYear()
-    const month = dataObject.toLocaleString('default', { month: 'short' })
-    const day = dataObject.getDate()
-    return `${day}-${month}-${year}`
-  }
+  // const formatDate = (date: string) => {
+  //   const dataObject = new Date(date)
+  //   const year = dataObject.getFullYear()
+  //   const month = dataObject.toLocaleString('default', { month: 'short' })
+  //   const day = dataObject.getDate()
+  //   return `${day}-${month}-${year}`
+  // }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
@@ -137,12 +138,13 @@ export default function OrganizerEvents() {
             <TableCaption>Events</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Event Name</TableHead>
-                <TableHead>Event Start Date</TableHead>
-                <TableHead>Event End Date</TableHead>
-                <TableHead>Event Category</TableHead>
-                <TableHead>Event Price</TableHead>
-                <TableHead>Event Capacity</TableHead>
+                <TableHead>Name</TableHead>
+                {/* <TableHead>Event Start Date</TableHead>
+                <TableHead>Event End Date</TableHead> */}
+                {/* <TableHead>Event Category</TableHead> */}
+                <TableHead>Price</TableHead>
+                <TableHead>Capacity</TableHead>
+                <TableHead> Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -151,11 +153,22 @@ export default function OrganizerEvents() {
                 filteredEvents.map((event) => (
                   <TableRow key={event._id}>
                     <TableCell>{event.name}</TableCell>
-                    <TableCell>{formatDate(event.start_date)}</TableCell>
-                    <TableCell>{formatDate(event.end_date)}</TableCell>
-                    <TableCell>{event.category}</TableCell>
+                    {/* <TableCell>{formatDate(event.start_date)}</TableCell>
+                    <TableCell>{formatDate(event.end_date)}</TableCell> */}
+                    
                     <TableCell>{event.price}</TableCell>
                     <TableCell>{event.capacity}</TableCell>
+                    <TableCell>
+                      {
+                        (event.status === 'approved') ? (
+                          <Badge variant={'success'}>Approved</Badge>
+                        ) : (event.status === 'pending') ? (
+                          <Badge variant={'warning'}>Pending</Badge>
+                        ) : (
+                          <Badge variant={'destructive'}>Rejected</Badge>
+                        )
+                      }
+                    </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger>

@@ -22,7 +22,6 @@ const routes = [
         icon: User,
         href: "/profile",
     },
-
 ]
 
 

@@ -1,10 +1,14 @@
 import OrganizerNav from '@/components/OrganizerNav'
-import React, { useState } from 'react'
 import {
   Calendar,
-  Grid2X2, IndianRupee, Users, MapPin
+  Grid2X2, IndianRupee,
+  MapPin, Pencil,
+  Trash,
+  Users
 } from 'lucide-react'
+import React, { useState } from 'react'
 
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,8 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Button } from '@/components/ui/button'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 
 type Event = {
@@ -217,9 +220,15 @@ export default function OrganizerEventById() {
             </CardContent>
             <CardFooter className='justify-between'>
               <Link to={`/event/edit/${event?._id}`}>
-                <Button variant={'secondary'} size={'lg'}>Edit</Button>
+                <Button variant={'secondary'} size={'lg'}>
+                  <Pencil className='w-4 h-4 mr-2' />
+                  Edit
+                </Button>
               </Link>
-                <Button variant={'destructive'} size={'lg'}>Delete</Button>
+                <Button variant={'destructive'} size={'lg'}>
+                  <Trash className='w-4 h-4 mr-2' />
+                  Delete
+                </Button>
             </CardFooter>
           </Card>
         </div>
