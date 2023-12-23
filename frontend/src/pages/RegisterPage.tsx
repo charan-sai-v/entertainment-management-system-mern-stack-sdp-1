@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -92,7 +92,9 @@ export function TabsDemo() {
       console.log(response)
   }
 
-
+  useEffect(() => {
+    console.log(absoluteUrl('/user/register'))
+  }, [])
 
   return (
     <Tabs defaultValue={activeTab} className="w-[450px]" >
