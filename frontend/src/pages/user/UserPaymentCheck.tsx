@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom'
 import { UserLayout } from '@/components/UserLayout';
 import { absoluteUrl } from '@/lib/utils';
 
-
 export default function UserPaymentCheck() {
   // const { bookingId } = useParams<{ bookingId: string }>()
   const [searchParams] = useSearchParams()
@@ -13,7 +12,7 @@ export default function UserPaymentCheck() {
   useEffect(() => {
     const fetchPayment = async () => {
       try { 
-        const res = await fetch(`${absoluteUrl('/user/check-payment')}`, { 
+        const res = await fetch(`${absoluteUrl('/user/check-payment')}/${session_id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

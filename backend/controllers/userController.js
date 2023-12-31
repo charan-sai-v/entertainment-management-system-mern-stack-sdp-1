@@ -17,35 +17,42 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
 // user register
 async function userRegister(req, res) {
     try {
-        // check if password and confirm password match
-        if (req.body.password !== req.body.confirm_password) {
-            return res.status(400).json({ message: 'Passwords do not match' });
+      // check if password and confirm password match
+      if (req.body.password !== req.body.confirm_password) {
+          return res.status(400).json({ message: 'Passwords do not match' });
+      }
+      // check if user email or phone number already exists
+      const existingUser = await User.findOne({
+          $or: [{ email: req.body.email }, { phone: req.body.phone }]
+      });
+        
+      if (existingUser) {
+        if (existingUser.email === req.body.email) {
+          return res.status(409).json({ message: 'Email already exists' });
+        } else {
+          return res.status(409).json({ message: 'Phone number already exists' });
         }
-        // check if user email exists
-        const exitsUser = await User.findOne({ email: req.body.email });
-        if (exitsUser) {
-            return res.status(409).json({ message: 'User already exists' });
-        }
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const token = crypto.randomBytes(32).toString('hex');
-        const user = new User({
-            name: req.body.name,
-            email: req.body.email,
-            phone: req.body.phone,
-            gender: req.body.gender,
-            password: hashedPassword,
-            token: token,
-            token_expires: Date.now() + 3600000 // 1 hour
-        });
-        await user.save();
-        await sendMail({
-            to: user.email,
-            subject: 'Email Verification',
-            html: `<h1>Click <a href="${process.env.CLIENT_URL}/verify/${token}">here</a> to verify your email</h1>`
-        });
-        res.status(200).json(user);
+      }
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const token = crypto.randomBytes(32).toString('hex');
+      const user = new User({
+          name: req.body.name,
+          email: req.body.email,
+          phone: req.body.phone,
+          gender: req.body.gender,
+          password: hashedPassword,
+          token: token,
+          token_expires: Date.now() + 3600000 // 1 hour
+      });
+      await user.save();
+      await sendMail({
+          to: user.email,
+          subject: 'Email Verification',
+          html: `<h1>Click <a href="${process.env.CLIENT_URL}/verify/${token}">here</a> to verify your email</h1>`
+      });
+      res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: error.message });      
+      res.status(500).json({ message: error.message });      
     }
 }
 

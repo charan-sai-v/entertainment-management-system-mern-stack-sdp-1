@@ -21,7 +21,7 @@ export default function UserEventById() {
   const bookEvent = async () => {
     if (tickets === 0) return alert('Please select number of tickets')
     try { 
-      const res = await fetch(`${absoluteUrl('/user/make-payment')}` , {
+      const res = await fetch(`${absoluteUrl('/user/make-payment')}/${id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -46,7 +46,7 @@ export default function UserEventById() {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`${absoluteUrl('/user/events')}/${id}`, {
+        const res = await fetch(`${absoluteUrl('/user/event')}/${id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

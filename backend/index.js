@@ -25,7 +25,7 @@ app.use('/organizer', organizerRoutes)
 app.use('/user', userRoutes)
 
 // dotenv
-require('dotenv').config()
+require('dotenv').config({ path: '.env.local' });
 
 // environment variables
 const port = process.env.PORT

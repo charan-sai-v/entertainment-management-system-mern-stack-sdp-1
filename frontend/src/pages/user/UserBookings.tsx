@@ -18,7 +18,7 @@ export default function UserDashboard() {
     const fetchEvents = async () => {
       try {
         const res = await fetch(`${absoluteUrl('/user/bookings')}`, {
-          headers: {
+          headers: { 
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });

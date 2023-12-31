@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 import { absoluteUrl } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
 
 export function TabsDemo() {
   const navigate = useNavigate()
@@ -41,9 +42,12 @@ export function TabsDemo() {
   const [phone, setPhone] = useState("")
   const [company, setCompany] = useState("")
   const [gender, setGender] = useState("")
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState(false);
 
   const userHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsSubmit(true);
     console.log(name+ " "+ email+ " "+ phone+" "+gender+" "+password+" "+confirm_password)
     const data = await fetch(`${absoluteUrl('/user/register')}`, {
       method: 'POST',
@@ -61,11 +65,18 @@ export function TabsDemo() {
       })
       const response = await data.json()
       if (data.status === 200) {
-        navigate('/login')
-      }else{
-        alert('Email already exist')
+        setIsRegisterSuccess(true);
+      } else if (response.message === 'Email already exists') {
+        alert('Email already exists')
+      } else if (response.message === 'Passwords do not match') {
+        alert('Password not match')
+      } else if (response.message === 'Phone number already exists') {
+        alert('Phone number already exists')
+      } else {
+        alert('Something went wrong')
       }
       console.log(response)
+      setIsSubmit(false);
   }
 
   const organizerHandleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -106,63 +117,85 @@ export function TabsDemo() {
         value="organizer">Organizer</TabsTrigger>
       </TabsList>
       <TabsContent value="user">
-        <Card>
-          <CardHeader>
-            <CardTitle>Welcome to User Registration</CardTitle>
-            <CardDescription>
-              Please enter your email and password to register.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <form onSubmit={userHandleSubmit}>
-            <div className="space-y-1">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder='John Doe' value={name} onChange={(e) => setName(e.target.value)} required/>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder='user@gmail.com' value={email} onChange={(e) => setEmail(e.target.value)} required/>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" placeholder='0123456789' value={phone} onChange={(e) => setPhone(e.target.value)} required/>
-            </div>
-            <div className='space-y-1'>
-              <Label htmlFor='gender'>Gender</Label>
-              <Select required onValueChange={(value) => setGender(value as string)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Gender"  />
-              </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
+        {isRegisterSuccess ? 
+        <div className=''>
+          <Card>
+            <CardHeader>
+              <CardTitle>Register Success</CardTitle>
+              <CardDescription>
+                Please check your email to verify your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className='flex items-center justify-center'>
+                <Button onClick={() => navigate('/login')}>Login</Button>
+              </div>
+            </CardContent>
+            <CardFooter>
+              
+            </CardFooter>
+          </Card>
+        </div>
+         : 
+          <Card>
+            <CardHeader>
+              <CardTitle>Welcome to User Registration</CardTitle>
+              <CardDescription>
+                Please enter your email and password to register.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <form onSubmit={userHandleSubmit}>
+              <div className="space-y-1">
+                <Label htmlFor="name">Name</Label>
+                <Input disabled={isSubmit} id="name" placeholder='John Doe' value={name} onChange={(e) => setName(e.target.value)} required/>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="email">Email</Label>
+                <Input disabled={isSubmit} id="email" placeholder='user@gmail.com' value={email} onChange={(e) => setEmail(e.target.value)} required/>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="phone">Phone</Label>
+                <Input disabled={isSubmit} id="phone" placeholder='0123456789' value={phone} onChange={(e) => setPhone(e.target.value)} required/>
+              </div>
+              <div className='space-y-1'>
+                <Label htmlFor='gender'>Gender</Label>
+                <Select disabled={isSubmit} required onValueChange={(value) => setGender(value as string)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select Gender"  />
+                </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
 
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type='password' placeholder='**********' value={password} onChange={(e) => setPassword(e.target.value)} required/>
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="password">Confirm Password</Label>
-              <Input id="confirm_password" type='password' placeholder='**********' value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)} required/>
-            </div>
-            <div className='flex items-center justify-between space-y-1'>
-                <a href="/user/login" className='hover:link text-blue-500'>
-                    Already have an account?
-                </a>
-            </div>
-            <div className='space-y-1'>
-              <Button type='submit' className='mt-3'>Register</Button>
-            </div>
-            </form>
-          </CardContent>
-          <CardFooter>
-            
-          </CardFooter>
-        </Card>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="password">Password</Label>
+                <Input disabled={isSubmit} id="password" type='password' placeholder='**********' value={password} onChange={(e) => setPassword(e.target.value)} required/>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="password">Confirm Password</Label>
+                <Input disabled={isSubmit} id="confirm_password" type='password' placeholder='**********' value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)} required/>
+              </div>
+              <div className='flex items-center justify-between space-y-1'>
+                  <a href="/user/login" className='hover:link text-blue-500'>
+                      Already have an account?
+                  </a>
+              </div>
+              <div className='space-y-1'>
+                <Button type='submit' className='mt-3' disabled={isSubmit}> {isSubmit && <Loader2 className='w-5 h-5 mr-2 animate-spin' />}Register</Button>
+              </div>
+              </form>
+            </CardContent>
+            <CardFooter>
+              
+            </CardFooter>
+          </Card>
+        }
+
       </TabsContent>
       <TabsContent value="organizer">
       <Card>

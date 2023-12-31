@@ -12,8 +12,12 @@ export default function HomePage() {
                 <img src={Img} alt="" className='h-80' />
                 </div>
                
-                <span className="text-7xl font-bold  [&amp;::selection]:text-base-content relative col-start-1 row-start-1 bg-[linear-gradient(90deg,hsl(var(--s))_0%,hsl(var(--sf))_9%,hsl(var(--pf))_42%,hsl(var(--p))_47%,hsl(var(--a))_100%)] bg-clip-text [-webkit-text-fill-color:transparent] [&amp;::selection]:bg-blue-700/20 [@supports(color:oklch(0_0_0))]:bg-[linear-gradient(90deg,hsl(var(--s))_4%,color-mix(in_oklch,hsl(var(--sf)),hsl(var(--pf)))_22%,hsl(var(--p))_45%,color-mix(in_oklch,hsl(var(--p)),hsl(var(--a)))_67%,hsl(var(--a))_100.2%)]">Welcome to Entertainment Management System</span>
-                <p className="my-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente similique cupiditate nam voluptas maiores itaque saepe, consequatur iste ratione perspiciatis tempora, praesentium ducimus consectetur natus dolores dolorum sequi quam soluta!</p>
+                <span className="text-7xl font-semibold  [&amp;::selection]:text-base-content relative col-start-1 row-start-1 ">Welcome to EMS</span>
+                <p className="my-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+                The event management system is a web application that allows organizers to create events and sell
+                tickets for those events. The application also allows users to buy tickets for events created by
+                organizers. The application is built using the MERN stack and uses the Stripe API for payment
+                </p>
                 <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
                     <a href="#" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
                         Sign Up

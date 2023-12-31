@@ -15,7 +15,7 @@ router.get('/dashboard/:category', userAuth, userController.userDashboardByCateg
 router.get('/all-events', userAuth, userController.viewAllEvents);
 router.get('/event/:id', userAuth, userController.viewEventById);
 router.post('/book-event/:id', userAuth, userController.bookEvent);
-router.get('/all-bookings', userAuth, userController.viewAllBookings);
+router.get('/bookings', userAuth, userController.viewAllBookings);
 router.get('/booking/:id', userAuth, userController.viewBookingById);
 router.delete('/cancel-booking/:id', userAuth, userController.cancelBooking);
 router.post('/make-payment/:event_id', userAuth, userController.makePayment);

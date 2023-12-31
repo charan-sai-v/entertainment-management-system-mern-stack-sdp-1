@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -23,9 +23,10 @@ import { absoluteUrl } from '@/lib/utils'
 
 
 export function TabsDemo() {
-  const [active, setActive] = React.useState("user")
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
+  const [active, setActive] = useState("user")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isUserNotVerified, setIsUserNotVerified] = useState(false)
   const handleTabChange = (tab: string) => {
     setEmail("")
     setPassword("")
@@ -50,6 +51,9 @@ export function TabsDemo() {
         localStorage.setItem('token', data.token)
         localStorage.setItem('id', data.id)
         navigate('/dashboard')
+      } else if(data.message === 'User is not verified') {
+        alert("Please verify your email")
+        setIsUserNotVerified(true)
       } else {
         alert("Invalid Credentials")
       }
@@ -92,6 +96,25 @@ export function TabsDemo() {
         <TabsTrigger onClick={() => handleTabChange("organizer")}  value="organizer">Organizer</TabsTrigger>
       </TabsList>
       <TabsContent value="user">
+        {isUserNotVerified ? 
+          <Card>
+          <CardHeader>
+            <CardTitle>User Email is not verified</CardTitle>
+            <CardDescription>
+              Please check your email to verify your account or click the link below to resend the verification email
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className='flex items-center justify-center mb-3'>
+              <Button onClick={() => navigate('/user/resend-verification-email')}>Go to Resend Verification Email</Button>
+            </div>
+            <div className='flex items-center justify-between'>
+              <a href='/login' className='hover:link text-blue-500'>Login</a>
+              <a href='/user/forgot-password' className='hover:link text-orange-500'>Forgot Password?</a>
+            </div>
+          </CardContent>
+        </Card>
+          :
         <Card>
           <CardHeader>
             <CardTitle>Welcome to User Login</CardTitle>
@@ -123,6 +146,7 @@ export function TabsDemo() {
             </form>
           </CardContent>
         </Card>
+        }
       </TabsContent>
       <TabsContent value="organizer">
       <Card>
