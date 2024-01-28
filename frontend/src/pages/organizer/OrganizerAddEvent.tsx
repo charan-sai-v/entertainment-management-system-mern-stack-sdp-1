@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from '@/components/ui/checkbox'
 import { OrganizerLayout } from '@/components/organizer/OrganizerLayout'
 import { ArrowLeft } from 'lucide-react'
+import { toast } from 'sonner'
 
 
 
@@ -88,6 +89,10 @@ export default function OrganizerAddEvent() {
             if (response.status===200) {
                 alert("Event added successfully");
                 navigate('/organizer/events');
+            }
+            if (response.status===401) {
+                alert("You need to first verify your bank account to add events.");
+                toast.error('You need to first verify your bank account to add events.');
             }
             if (data.message === 'Invalid Token') {
                 alert("Session expired. Please login again.");

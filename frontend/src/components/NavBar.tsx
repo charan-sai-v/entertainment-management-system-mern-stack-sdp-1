@@ -1,5 +1,7 @@
 import React from 'react'
 import { ModeToggle } from '@/components/mode-toggle'
+import { Button } from './ui/button'
+import { Link } from 'react-router-dom'
 
 export default function NavBar() {
   return (
@@ -28,7 +30,7 @@ export default function NavBar() {
                 <li><a>Item 3</a></li>
               </ul> */}
             </div>
-            <a className="btn btn-ghost normal-case text-xl" href='/'>EMS</a>
+            <a className="btn btn-ghost text-white normal-case text-xl" href='/'>EMS</a>
           </div>
           <div className="navbar-center hidden lg:flex">
             {/* <ul className="menu menu-horizontal px-1">
@@ -49,7 +51,9 @@ export default function NavBar() {
             <div className='mr-5'>
               <ModeToggle />
             </div>
-            <a className="btn dark:btn-primary" href='/login'>Login</a>
+            <Link to={'/login'}>
+              <Button>Login</Button>
+            </Link>
           </div>
         </div>
     </div>

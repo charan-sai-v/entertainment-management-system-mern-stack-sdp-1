@@ -2,6 +2,7 @@ import React from 'react'
 import OrganizerSidebar from './OrganizerSidebar'
 import OrganizerNavbar from './OrganizerNavbar'
 import { CrispChat } from './crisp-chat'
+import { Toaster } from 'sonner'
 
 export const OrganizerLayout = ({
     children
@@ -17,7 +18,8 @@ export const OrganizerLayout = ({
               <OrganizerNavbar />
               {children}
           </main>
-      </div>
+        </div>
+        <Toaster />
     </div>
   )
 }

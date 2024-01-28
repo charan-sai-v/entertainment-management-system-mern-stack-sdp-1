@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
-const dotenv = require('dotenv');
 
-dotenv.config();
+require('dotenv').config({ path: '.env.local' });
 
 const transporter = nodemailer.createTransport({
     host: "mail.wpless.com",

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { 
   Table,
-  TableCaption,
   TableHeader,
   TableHead,
   TableRow,
@@ -26,6 +25,7 @@ import { useNavigate } from 'react-router-dom'
 import Event  from '@/models/Event'
 import { OrganizerLayout } from '@/components/organizer/OrganizerLayout'
 import { Badge } from '@/components/ui/badge'
+import { Alert } from '@/components/ui/alert'
 
 
 export default function OrganizerEvents() {
@@ -34,6 +34,7 @@ export default function OrganizerEvents() {
   const [events, setEvents] = React.useState<Event[]>([])
   const [filteredEvents, setFilteredEvents] = React.useState<Event[]>([])
   const [searchValue, setSearchValue] = React.useState('')
+  const [isBankVerified, setIsBankVerified] = React.useState(false)
 
   const navigate = useNavigate()
 
@@ -48,11 +49,17 @@ export default function OrganizerEvents() {
           }
         })
         const data = await response.json()
+        if (response.status === 401) {
+          setIsBankVerified(false)
+          setLoading(false)
+          return
+        }
         if (response.status !== 200) {
           navigate('/login')
         }
         console.log(data)
         setEvents(data)
+        setIsBankVerified(true)
         setFilteredEvents(data)
         setLoading(false)
       } catch (error) {
@@ -121,21 +128,31 @@ export default function OrganizerEvents() {
         <div className=' px-4 '>
           <div className='mt-10 space-y-5 '>
             <h1 className='text-2xl font-bold'>Events</h1>
-            <div className='flex justify-between items-center'>
-              <Link to={'/organizer/event/add'}><Button size={'lg'}>Add Event</Button></Link>
-              <div className='relative'>
-                <Input
-                  value={searchValue}
-                  onChange={handleSearch}
-                  type='text'
-                  placeholder='Search'
-                  className='pl-10'
-                />
-                <Search className='absolute top-2 left-2' />
-              </div>
-            </div>
+            {
+              !isBankVerified && (
+                <Alert variant='default'>
+                  Please verify your bank account to add events. Go to  <Link className='link' to='/organizer/settings'>Settings</Link> to verify.
+                </Alert>
+              )
+            }
+            {
+              isBankVerified && (
+                <div className='flex justify-between items-center'>
+                  <Link to={'/organizer/event/add'}><Button size={'lg'}>Add Event</Button></Link>
+                  <div className='relative'>
+                    <Input
+                      value={searchValue}
+                      onChange={handleSearch}
+                      type='text'
+                      placeholder='Search'
+                      className='pl-10'
+                    />
+                    <Search className='absolute top-2 left-2' />
+                  </div>
+                </div>
+              )
+            }
           <Table className=''>
-            <TableCaption>Events</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>

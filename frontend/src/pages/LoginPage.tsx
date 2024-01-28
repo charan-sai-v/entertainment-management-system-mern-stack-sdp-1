@@ -89,8 +89,8 @@ export function TabsDemo() {
 
   
   return (
-    <Tabs defaultValue={active} className="w-[450px]">
-        <h1 className='my-6 text-3xl text-center '>Login Page</h1>
+    <Tabs defaultValue={active} className="md:w-[450px]">
+        <h1 className='my-6 font-bold text-3xl text-center '>Login Page</h1>
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger onClick={() => handleTabChange("user")}  value="user">User</TabsTrigger>
         <TabsTrigger onClick={() => handleTabChange("organizer")}  value="organizer">Organizer</TabsTrigger>
@@ -117,7 +117,11 @@ export function TabsDemo() {
           :
         <Card>
           <CardHeader>
-            <CardTitle>Welcome to User Login</CardTitle>
+            <CardTitle>
+              <h3 className='tracking-normal'>
+                Welcome to User Login
+              </h3>
+            </CardTitle>
             <CardDescription>
               Please enter your email and password to login
             </CardDescription>
@@ -151,7 +155,11 @@ export function TabsDemo() {
       <TabsContent value="organizer">
       <Card>
           <CardHeader>
-            <CardTitle>Welcome to Organizer Login</CardTitle>
+            <CardTitle>
+            <h3 className='tracking-normal'>
+                Welcome to User Login
+              </h3>
+            </CardTitle>
             <CardDescription>
               Please enter your email and password to login
             </CardDescription>

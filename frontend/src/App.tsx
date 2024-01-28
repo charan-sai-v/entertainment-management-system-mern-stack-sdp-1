@@ -35,6 +35,8 @@ import UserVerify from './pages/user/UserVerify'
 import UserProfile from './pages/user/UserProfile'
 import UserPaymentCheck from './pages/user/UserPaymentCheck'
 import OrganizerSetting from './pages/organizer/OrganizerSetting'
+import UserForgotPassword from './pages/user/UserForgotPassword'
+import OrganizerForgotPassword from './pages/organizer/OrganizerForgotPassword'
 
 
 export default function App() {
@@ -57,11 +59,12 @@ export default function App() {
           {/* Employee Routes */}
           <Route path='/login' element={<EmployeeLogin />} />
           {/* Employee Private Routes */}
-            <Route path='/employee/dashboard' element={<EmployeePrivateRoute><EmployeeDashboard /></EmployeePrivateRoute> } />
-            <Route path='/employee/events' element={<EmployeePrivateRoute><EmployeeViewEvents /></EmployeePrivateRoute>} />
-            <Route path='/employee/event/:id' element={<EmployeePrivateRoute><EmployeeEventById/> </EmployeePrivateRoute> } />
+          <Route path='/employee/dashboard' element={<EmployeePrivateRoute><EmployeeDashboard /></EmployeePrivateRoute> } />
+          <Route path='/employee/events' element={<EmployeePrivateRoute><EmployeeViewEvents /></EmployeePrivateRoute>} />
+          <Route path='/employee/event/:id' element={<EmployeePrivateRoute><EmployeeEventById/> </EmployeePrivateRoute> } />
 
           {/* Organizer Routes */}
+          <Route path='/organizer/forgot-password' element={<OrganizerForgotPassword /> } />
           {/* Organizer Private Routes */}
           <Route path='/organizer/dashboard' element={<OrganizerPrivateRoute><OrganizerDashboard /></OrganizerPrivateRoute> } />
           <Route path='/organizer/events' element={<OrganizerPrivateRoute><OrganizerEvents /></OrganizerPrivateRoute>} />
@@ -71,6 +74,7 @@ export default function App() {
           <Route path='/organizer/settings' element={<OrganizerPrivateRoute><OrganizerSetting /></OrganizerPrivateRoute>} />
 
           {/* User Routes */}
+          <Route path='/forgot-password' element={<UserForgotPassword /> } /> 
           <Route path='/verify/:token' element={<UserVerify />} />
           {/* User Private Routes */}
           <Route path='/dashboard' element={<UserPrivateRoute><UserDashboard /></UserPrivateRoute> } />

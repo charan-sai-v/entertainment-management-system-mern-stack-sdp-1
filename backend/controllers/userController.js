@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt');
 // generate random token
 const crypto = require('crypto');
 const sendMail = require('../utils/mail');
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config({ path: '.env.local' });
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2020-08-27'
 });
@@ -48,7 +48,7 @@ async function userRegister(req, res) {
       await sendMail({
           to: user.email,
           subject: 'Email Verification',
-          html: `<h1>Click <a href="${process.env.CLIENT_URL}/verify/${token}">here</a> to verify your email</h1>`
+          html: `<p>Click <a href="${process.env.CLIENT_URL}/verify/${token}">here</a> to verify your email</p>`
       });
       res.status(200).json(user);
     } catch (error) {
@@ -79,6 +79,7 @@ async function userVerify(req, res) {
         }
         user.is_verified = true;
         user.token = '';
+        user.token_expires = undefined;
         await user.save();
         res.status(200).json({ message: 'User verified' });
     } catch (error) {
